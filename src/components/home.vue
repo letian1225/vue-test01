@@ -23,7 +23,7 @@
           :index="index"
           :selected="selected"
           effect-allowed="move">
-          {{person.type}}
+          <controlTextbox v-if="person.type == 'TEXTBOX'"></controlTextbox>
         </vddl-draggable >
 
         <vddl-placeholder class="panel__placeholder">
@@ -133,6 +133,7 @@
 <script>
 import Vue from 'vue'
 import Vddl from 'vddl';
+import controlTextbox from './controlTextbox'
 Vue.use(Vddl);
 
 export default {
@@ -231,6 +232,9 @@ export default {
 
 
 
+  },
+  components:{
+    controlTextbox
   }
 
 }
