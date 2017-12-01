@@ -4,12 +4,13 @@
 
     <div v-for="list in lists">
       
+      <!--
       <vddl-list :list="[]" class="panel__body--list">
         <vddl-placeholder class="panel__placeholder">
           DELETE
         </vddl-placeholder>
       </vddl-list>
-      
+      -->
       <br><br>
 
       <vddl-list class="panel__body--list" 
@@ -23,7 +24,9 @@
           :index="index"
           :selected="selected"
           effect-allowed="move">
-          <controlTextbox v-if="person.type == 'TEXTBOX'"></controlTextbox>
+
+          <CONTROL :data="person"></CONTROL>
+
         </vddl-draggable >
 
         <vddl-placeholder class="panel__placeholder">
@@ -53,77 +56,15 @@
     </div>
     
     <br><br>
+    
 
-
-    <div v-for="attr in attribute">
-      {{attr}}
-
-      <h3>{{attr.type}}</h3>
-      <div v-for="attrList in attrLists">
-
-        
-        <!--All Attribute-->
-        
-
-
-        <div v-if="attrList == 'id'">
-          <input type="text" v-model="attr.id">
-        </div>
-
-        <div v-if="attrList == 'name'">
-          <input type="text" v-model="attr.name">
-        </div>
-
-        <div v-if="attrList == 'align'">
-          <select v-model="attr.align">
-            <option value=""></option>
-            <option value="left">left</option>
-            <option value="right">right</option>
-          </select>
-        </div>
-
-        <div v-if="attrList == 'disabled'">
-          <select v-model="attr.disabled">
-            <option value=""></option>
-            <option value="true">true</option>
-            <option value="false">false</option>
-          </select>
-        </div>
-
-        <div v-if="attrList == 'value'">
-          <input type="text" v-model="attr.value">
-        </div>
-
-        <div v-if="attrList == 'maxLength'">
-          <input type="number" v-model="attr.maxLength">
-        </div>
-
-
-
-
-
-        <div v-if="attrList == 'readOnly'">
-          <select v-model="attr.readOnly">
-            <option value=""></option>
-            <option value="true">true</option>
-            <option value="false">false</option>
-          </select>
-        </div>
-
-        <div v-if="attr.type == 'TEXTBOX'">
-          
-        </div>
-
-
-      </div>
-      
-
-    </div>
+    <ATTRPANEL :data="attribute" :attrLists="attrLists"></ATTRPANEL>
+    
+    
     <button type="button" v-on:click="save()">button</button>
 
 
-    <br>
-    <pre>{{controls}}</pre>
+
     <br> 
     <pre>{{lists}}</pre> 
 
@@ -133,7 +74,8 @@
 <script>
 import Vue from 'vue'
 import Vddl from 'vddl';
-import controlTextbox from './controlTextbox'
+import CONTROL from './control'
+import ATTRPANEL from './attrPanel'
 Vue.use(Vddl);
 
 export default {
@@ -151,6 +93,7 @@ export default {
           "norm":[
             {
               "type": "TEXTBOX",
+              "labeltext":"label",
               "id":"",
               "name":"",
               "value":"",
@@ -161,8 +104,17 @@ export default {
             },
             {
               "type": "SELECT",
-
-
+              "labeltext":"label",
+              "id":"",
+              "name":"",
+              "align":"",
+              "disabled":"",
+              "option":[
+                {
+                  "value":"",
+                  "text":"",
+                }
+              ]
             },
             {
               "type": "RADIO",
@@ -170,6 +122,7 @@ export default {
           ]
         }
       ],
+
       "lists": [
         {
           "label": "form",
@@ -178,25 +131,19 @@ export default {
           ],
           "people": [
             {
-              "type": "TEXTBOX",
-              "id":"",
-              "name":"",
-              "value":"",
-              "maxLength":"",
-              "readOnly":"",
-              "align":"",
-              "disabled":"",
-            },
-            {
               "type": "SELECT",
-              "id":"",
+              "labeltext":"label",
+              "id":"7f275028-6aa1-46fd-ab32-19880d4a0a8d",
               "name":"",
               "align":"",
               "disabled":"",
+              "option":[
+                {
+                  "value":"",
+                  "text":"",
+                }
+              ]
 
-            },
-            {
-              "type": "RADIO",
             }
             //...
           ]
@@ -208,9 +155,10 @@ export default {
     //controls methods
     copied(item){},
     dragend(data){},
-
     //lists methods
-    inserted(data){},
+    inserted(data){
+      data.item.id = this.guid();
+    },
     selected(data){
       this.attribute = []
       this.attribute.push(data);
@@ -218,23 +166,24 @@ export default {
       for(let x in data){
         this.attrLists.push(x);
       }
-     
     },
-
-
-
+    guid() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+            return v.toString(16);
+        });
+    },
     save(){
       // for(let i = 0; i < this.lists[0].people.length; i++){
       //   this.lists[0].people[i].sort = i;
       // }
-      console.log(this.lists);
     }
 
 
 
   },
   components:{
-    controlTextbox
+    CONTROL,ATTRPANEL
   }
 
 }
@@ -243,7 +192,7 @@ export default {
 <style scoped>
 *{font-size: 12px;}
 pre{width: 100%; text-align: left; font-size: 14px;}
-.panel__body--list{min-height: 100px; background-color: #f7f7f7;}
+.panel__body--list{min-height: 100px; }
 .vddl-placeholder{opacity: .2;}
 .vddl-dragging-source{color: #f00;}
 </style>
