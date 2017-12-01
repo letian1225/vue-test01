@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="attrpanel">
 		<div v-for="attr in data">
 		  <h3>{{attr.type}}</h3>
 		  <div v-for="attrList in attrLists">
@@ -71,4 +71,5 @@
 	}
 </script>
 <style scoped lang="less">
+.attrpanel{width: 300px; height: 100%; position: fixed; right: 0; top:0; background-color: #f2f2f2; border-left: 1px solid #eee;}
 </style>
