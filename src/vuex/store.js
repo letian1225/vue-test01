@@ -48,8 +48,8 @@ const UID = function(){
 
 const mutations = {
 	SET_CONTROLS(state,data){
-		console.log(data);
-		state.controls = data;
+		console.log(data)
+		state.controls.push(data)
 	},
 	COPIED(state){
 

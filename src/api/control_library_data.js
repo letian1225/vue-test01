@@ -1,4 +1,5 @@
-{
+import Mock from 'mockjs';
+export default Mock.mock('http://api.com', {
   "label": "Control library",
   "allowedTypes": [
     "page"
@@ -48,4 +49,5 @@
     "align": "",
     "disabled": ""
   }]
-}
+
+});

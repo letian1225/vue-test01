@@ -1,47 +1,74 @@
 <template>
-	<div class="attrpanel">
+	<div>
 		<div v-for="attr in data">
-		  <h3>{{attr.type}}</h3>
+		  <h3 class="attr-control-name">{{attr.type}}</h3>
 		  <div v-for="attrList in attrLists">
 		    <!--All Attribute-->
 		    <div v-if="attrList == 'labeltext'">
-		      <input type="text" v-model="attr.labeltext">
+		    	<div class="attr-item">
+		    		<div class="attr-item-label">LabelName</div>
+		    		<div class="attr-item-field"><input type="text" v-model="attr.labeltext"></div>
+		    	</div>
 		    </div>
 
 		    <div v-if="attrList == 'name'">
-		      <input type="text" v-model="attr.name">
+		    	<div class="attr-item">
+		    		<div class="attr-item-label">Name</div>
+		    		<div class="attr-item-field"><input type="text" v-model="attr.name"></div>
+		    	</div>
 		    </div>
 
 		    <div v-if="attrList == 'align'">
-		      <select v-model="attr.align">
-		        <option value=""></option>
-		        <option value="left">left</option>
-		        <option value="right">right</option>
-		      </select>
+		      <div class="attr-item">
+		      	<div class="attr-item-label">Align</div>
+		      	<div class="attr-item-field">
+		      		<select v-model="attr.align">
+		      		  <option value=""></option>
+		      		  <option value="left">left</option>
+		      		  <option value="right">right</option>
+		      		</select>
+		      	</div>
+		      </div>
 		    </div>
 
 		    <div v-if="attrList == 'disabled'">
-		      <select v-model="attr.disabled">
-		        <option value=""></option>
-		        <option value="true">true</option>
-		        <option value="false">false</option>
-		      </select>
+		      <div class="attr-item">
+		      	<div class="attr-item-label">Disabled</div>
+		      	<div class="attr-item-field">
+		      		<select v-model="attr.disabled">
+		      		  <option value=""></option>
+		      		  <option value="true">true</option>
+		      		  <option value="false">false</option>
+		      		</select>
+		      	</div>
+		      </div>
 		    </div>
 
 		    <div v-if="attrList == 'value'">
-		      <input type="text" v-model="attr.value">
+		    	<div class="attr-item">
+		    		<div class="attr-item-label">Value</div>
+		    		<div class="attr-item-field"><input type="text" v-model="attr.value"></div>
+		    	</div>
 		    </div>
 
 		    <div v-if="attrList == 'maxLength'">
-		      <input type="number" v-model="attr.maxLength">
+		      <div class="attr-item">
+		      	<div class="attr-item-label">MaxLength</div>
+		      	<div class="attr-item-field"><input type="text" v-model="attr.maxLength"></div>
+		      </div>
 		    </div>
 
 		    <div v-if="attrList == 'readOnly'">
-		      <select v-model="attr.readOnly">
-		        <option value=""></option>
-		        <option value="true">true</option>
-		        <option value="false">false</option>
-		      </select>
+		      <div class="attr-item">
+		      	<div class="attr-item-label">Readonly</div>
+		      	<div class="attr-item-field">
+					<select v-model="attr.readOnly">
+					  <option value=""></option>
+					  <option value="true">true</option>
+					  <option value="false">false</option>
+					</select>
+		      	</div>
+		      </div>
 		    </div>
 
 		    <div v-if="attr.type == 'SELECT'">
@@ -52,9 +79,14 @@
 		            :wrapper="attr.option"
 		            :index="index"
 		            effect-allowed="move">
-		            <input type="text" v-model="option.value">
-		            <input type="text" v-model="option.text">
-		            <a href="javascript:void(0);" v-on:click="attr.option.splice(index, 1)">remove</a>
+		            <div class="attr-item">
+		            	<div class="attr-item-label">Option</div>
+		            	<div class="attr-item-label sm">V</div>
+		            	<div class="attr-item-field sm"><input type="text" v-model="option.value"></div>
+		            	<div class="attr-item-label sm">T</div>
+		            	<div class="attr-item-field sm"><input type="text" v-model="option.text"></div>
+		            	<a href="javascript:void(0);" v-on:click="attr.option.splice(index, 1)" class="fa fa-remove"></a>
+		            </div>
 		          </vddl-draggable>
 		        </vddl-list>
 		        <a href="javascript:void(0);" v-on:click="attr.option.push({'value':'','text':''})">add a option</a>
@@ -71,5 +103,23 @@
 	}
 </script>
 <style scoped lang="less">
-.attrpanel{width: 300px; height: 100%; position: fixed; right: 0; top:0; background-color: #fff; border-left: 1px solid #fff;}
+.clearfix(){
+	&:before,
+	&:after{content:" "; display:table; clear:both;}
+}
+.attr-control-name{padding: 10px; background-color: #1d4350; color: #fff;}
+.attr-item{width: 100%;  .clearfix(); position: relative; border-bottom: 1px solid #ccc;
+	.attr-item-label{width: 30%;  height: 30px; line-height: 30px; padding: 0 5px; box-sizing: border-box; font-size: 12px; float: left; white-space: normal; text-overflow: ellipsis; overflow: hidden;
+		& + .attr-item-field{width: 70%; float: left;
+			&.sm{width: 50px;
+				+ a{height: 30px; display: inline-block; line-height: 30px; padding: 0 10px; float: right; box-sizing: border-box; }
+			}
+		}
+		&.sm{width: auto; background-color: #ccc;}
+	}
+	.attr-item-field{width:100%;
+		input[type=text]{width: 100%; height: 30px; padding: 0 5px; box-sizing: border-box; border:0; -webkit-appearance:none; background-color: #fff;}
+		select{width: 100%; height: 30px; padding: 0 5px; box-sizing: border-box; border:0; -webkit-appearance:none; background: url("../assets/arrow.png") #fff no-repeat scroll right center ;}
+	}
+}
 </style>

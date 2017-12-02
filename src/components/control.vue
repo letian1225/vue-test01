@@ -3,7 +3,7 @@
 	<div>
 		<div v-if="data.type == 'TEXTBOX'" class="control-item">
 		  <div class="control-label">{{data.labeltext}}</div>
-		  <div class="control-field"><input type="text"></div>
+		  <div class="control-field"><input type="text" :value="data.value"></div>
 		</div>
 		<div v-if="data.type == 'SELECT'" class="control-item">
 		  <div class="control-label">{{data.labeltext}}</div>
@@ -26,12 +26,14 @@
 	&:after{content:" "; display:table; clear:both;}
 }
 .control-item{ 
-	//border-bottom:1px solid #ccc; width: 100%; box-sizing: border-box; padding: 10px 5px; .clearfix(); position: relative;
-	.control-label{width: 30%;  height: 30px; line-height: 30px; float: left; white-space: normal; text-overflow: ellipsis; overflow: hidden;
+	width: 100%; box-sizing: border-box; padding: 10px 5px; .clearfix(); position: relative;
+	.control-label{width: 30%;  height: 30px; line-height: 30px; font-size: 12px; float: left; white-space: normal; text-overflow: ellipsis; overflow: hidden;
 		& + .control-field{width: 70%; float: left;}
 	}
 	.control-field{width: 100%;
-		select{width: 100%; height: 30px;}
+		input[type=text]{width: 100%; pointer-events: none; height: 30px; padding: 0 5px; box-sizing: border-box; border:1px solid #333; -webkit-appearance:none; background-color: #fff;}
+		
+		select{width: 100%; height: 30px; pointer-events: none; padding: 0 5px; box-sizing: border-box; border:1px solid #333; -webkit-appearance:none; background: url("../assets/arrow.png") #fff no-repeat scroll right center ;}
 	}
 }
 </style>
