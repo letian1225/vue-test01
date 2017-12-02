@@ -25,7 +25,8 @@
 	&:before,
 	&:after{content:" "; display:table; clear:both;}
 }
-.control-item{ border-bottom:1px solid #ccc; width: 100%; box-sizing: border-box; padding: 10px 5px; .clearfix(); position: relative;
+.control-item{ 
+	//border-bottom:1px solid #ccc; width: 100%; box-sizing: border-box; padding: 10px 5px; .clearfix(); position: relative;
 	.control-label{width: 30%;  height: 30px; line-height: 30px; float: left; white-space: normal; text-overflow: ellipsis; overflow: hidden;
 		& + .control-field{width: 70%; float: left;}
 	}

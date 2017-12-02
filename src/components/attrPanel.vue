@@ -71,5 +71,5 @@
 	}
 </script>
 <style scoped lang="less">
-.attrpanel{width: 300px; height: 100%; position: fixed; right: 0; top:0; background-color: #f2f2f2; border-left: 1px solid #eee;}
+.attrpanel{width: 300px; height: 100%; position: fixed; right: 0; top:0; background-color: #fff; border-left: 1px solid #fff;}
 </style>
