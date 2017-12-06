@@ -31,6 +31,24 @@ const state = {
 	        ]
 
 	      },
+	      {
+	        "type": "RADIO",
+	        "labeltext": "label",
+	        "disabled": "",
+	        "id": "",
+	        "group":[
+	        {
+	          "name": "33",
+	          "value": "22",
+	          "text": "11"
+	        },
+	        {
+	          "name": "33",
+	          "value": "111",
+	          "text": "111"
+	        }
+	        ]
+	      },
 	      
 	      //...
 	    ]
@@ -59,6 +77,7 @@ const mutations = {
 	},
 	INSERTED(state,data){
 	  data.item.id = UID();
+	  console.log(data.item.id);
 	},
 	SELECTED_EVENT(state,item){
 	  state.selected = item;

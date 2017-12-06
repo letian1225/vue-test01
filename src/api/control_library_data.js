@@ -35,10 +35,14 @@ export default Mock.mock('http://api.com', {
     "type": "RADIO",
     "icon": "fa fa-dot-circle-o",
     "labeltext": "label",
-    "id": "",
-    "name": "",
-    "align": "",
-    "disabled": ""
+    "disabled": "",
+    "group":[
+    {
+      "id": "",
+      "name": "",
+      "value": "",
+      "text": ""
+    }]
   },
   {
     "type": "CHECKBOX",

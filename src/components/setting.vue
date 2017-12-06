@@ -1,9 +1,9 @@
+<!--All attribute setting-->
 <template>
-	<div>
+	<div class="setting">
 		<div v-for="attr in data">
 		  <h3 class="attr-control-name">{{attr.type}}</h3>
 		  <div v-for="attrList in attrLists">
-		    <!--All Attribute-->
 		    <div v-if="attrList == 'labeltext'">
 		    	<div class="attr-item">
 		    		<div class="attr-item-label">LabelName</div>
@@ -93,33 +93,72 @@
 		      </div>
 		    </div>
 
+		    <div v-if="attr.type == 'RADIO'">
+		      <div v-if="attrList == 'group'">
+		        <vddl-list :list="attr.group">
+		          <vddl-draggable v-for="(group, index) in attr.group" :key="group.value"
+		            :draggable="group"
+		            :wrapper="attr.group"
+		            :index="index"
+		            effect-allowed="move">
+		            <div class="attr-item">
+		            	<div class="attr-item-label">Group</div>
+		            	<div class="attr-item-label sm">ID</div>
+		            	<div class="attr-item-field sm"><input type="text" v-model="group.id"></div>
+		            	<div class="attr-item-label sm">Name</div>
+		            	<div class="attr-item-field sm"><input type="text" v-model="group.name"></div>
+		            	<div class="attr-item-label sm">V</div>
+		            	<div class="attr-item-field sm"><input type="text" v-model="group.value"></div>
+		            	<div class="attr-item-label sm">T</div>
+		            	<div class="attr-item-field sm"><input type="text" v-model="group.text"></div>
+		            	<a href="javascript:void(0);" v-on:click="attr.group.splice(index, 1)" class="fa fa-remove"></a>
+		            </div>
+		          </vddl-draggable>
+		        </vddl-list>
+		        <a href="javascript:void(0);" v-on:click="attr.group.push({'id':'','name':'','value':'','text':''})">add a radio</a>
+		      </div>
+		    </div>
+
 		  </div>
 		</div>
 	</div>
 </template>
 <script>
-	export default{
-		props: ['data','attrLists']
-	}
+import Vue from 'vue'
+import Vddl from 'vddl';
+import { mapGetters, mapActions } from 'vuex';
+Vue.use(Vddl);
+export default {
+  computed: {
+    ...mapGetters({
+      controls:'controls',
+    }),
+  },
+  created(){
+    this.$store.dispatch('controls')
+  },
+  methods: {},
+  components:{}
+}
 </script>
 <style scoped lang="less">
 .clearfix(){
 	&:before,
 	&:after{content:" "; display:table; clear:both;}
 }
-.attr-control-name{padding: 10px; background-color: #1d4350; color: #fff;}
-.attr-item{width: 100%;  .clearfix(); position: relative; border-bottom: 1px solid #ccc;
-	.attr-item-label{width: 30%;  height: 30px; line-height: 30px; padding: 0 5px; box-sizing: border-box; font-size: 12px; float: left; white-space: normal; text-overflow: ellipsis; overflow: hidden;
-		& + .attr-item-field{width: 70%; float: left;
-			&.sm{width: 50px;
-				+ a{height: 30px; display: inline-block; line-height: 30px; padding: 0 10px; float: right; box-sizing: border-box; }
-			}
-		}
-		&.sm{width: auto; background-color: #ccc;}
-	}
-	.attr-item-field{width:100%;
-		input[type=text]{width: 100%; height: 30px; padding: 0 5px; box-sizing: border-box; border:0; -webkit-appearance:none; background-color: #fff;}
-		select{width: 100%; height: 30px; padding: 0 5px; box-sizing: border-box; border:0; -webkit-appearance:none; background: url("../assets/arrow.png") #fff no-repeat scroll right center ;}
-	}
-}
+// .attr-control-name{padding: 10px; background-color: #1d4350; color: #fff;}
+// .attr-item{width: 100%;  .clearfix(); position: relative; border-bottom: 1px solid #ccc;
+// 	.attr-item-label{width: 30%;  height: 30px; line-height: 30px; padding: 0 5px; box-sizing: border-box; font-size: 12px; float: left; white-space: normal; text-overflow: ellipsis; overflow: hidden;
+// 		& + .attr-item-field{width: 70%; float: left;
+// 			&.sm{width: 50px;
+// 				+ a{height: 30px; display: inline-block; line-height: 30px; padding: 0 10px; float: right; box-sizing: border-box; }
+// 			}
+// 		}
+// 		&.sm{width: auto; background-color: #ccc;}
+// 	}
+// 	.attr-item-field{width:100%;
+// 		input[type=text]{width: 100%; height: 30px; padding: 0 5px; box-sizing: border-box; border:0; -webkit-appearance:none; background-color: #fff;}
+// 		select{width: 100%; height: 30px; padding: 0 5px; box-sizing: border-box; border:0; -webkit-appearance:none; background: url("../assets/arrow.png") #fff no-repeat scroll right center ;}
+// 	}
+// }
 </style>
