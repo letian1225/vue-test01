@@ -50,60 +50,13 @@
 
 import controls from './controls'
 import design from './design'
-//import ATTRPANEL from './attrPanel'
-
 
 
 export default {
-  /*
-  computed: {
-    ...mapGetters({
-      controls:'controls'
-    }),
-    // controls(){
-    //   return this.$store.state.controls
-    // },
-    // lists(){
-    //   return this.$store.state.lists
-    // },
-    // selected(){
-    //   return this.$store.state.selected
-    // },
-    // attrKey(){
-    //   return this.$store.state.attrKey
-    // },
-    // attrLists(){
-    //   return this.$store.state.attrLists
-    // },
-    // printFormListsJSON(){
-    //   return this.$store.state.lists
-    // }
-  },
-  created(){
-    this.$store.dispatch('controls')
-  },
-  methods: {
-    // openConsole(){
-    //   this.$modal.show('console');
-    // },
-    // copied(){
-    //   this.$store.commit('COPIED')
-    // },
-    // inserted(data){
-    //   this.$store.commit('INSERTED',data)
-    // },
-    // selectedEvent(item){
-    //   this.$store.commit('SELECTED_EVENT',item)
-    // },
-    // saveFormLists(){
-    //   this.$store.commit('SAVE_FORM_LIST')
-    // },
-  },
-  */
+  name:"home",
   components:{
     controls,design
   }
-
 }
 </script>
 

@@ -1,81 +1,45 @@
 import Vue from 'vue'
-import api from '../../api/control_library_data'
+import control_library_data from '../../api/control_library_data'
+import design_lists_data from '../../api/design_lists_data'
+
 import * as types from '../mutation-types'
 const state = {
 	uid:"",
 	selected:"",
 	controls:[],
-	lists: [
-	  {
-	    "label": "form",
-	    "allowedTypes": [
-	      "page"
-	    ],
-	    "people": [
-	      {
-	        "type": "SELECT",
-	        "labeltext":"label",
-	        "id":"7f275028-6aa1-46fd-ab32-19880d4a0a8d",
-	        "name":"",
-	        "align":"",
-	        "disabled":"",
-	        "option":[
-	          {
-	            "value":"",
-	            "text":"",
-	          }
-	        ]
-
-	      },
-	      {
-	        "type": "RADIO",
-	        "labeltext": "label",
-	        "disabled": "",
-	        "id": "",
-	        "group":[
-	        {
-	          "name": "33",
-	          "value": "22",
-	          "text": "11"
-	        },
-	        {
-	          "name": "33",
-	          "value": "111",
-	          "text": "111"
-	        }
-	        ]
-	      },
-	      
-	      //...
-	    ]
-	  }
-	]
+	lists: []
 }
 // getters
 const getters = {
   controls: state => state.controls,
   lists: state => state.lists,
+  selected: state => state.selected,
 }
 
 
 // actions
 const actions = {
   controls({ commit }){
-    Vue.http.get("http://api.com")
+    Vue.http.get("http://control.com")
       .then((res) => {
         commit(types.CONTROLS, res.data)
-        console.log(res.data)
       },(error) => {
         console.log(error)
       });
   },
-  lists({ commit }, item){
-  	commit(types.LISTS, item)
+  lists({ commit }){
+    Vue.http.get("http://lists.com")
+      .then((res) => {
+        commit(types.LISTS, res.data)
+      },(error) => {
+        console.log(error)
+      });
   },
-  selected({ commit }, item){
-  	commit(types.CONTROLS, item)
+  selectedEvent({ commit }, item){
+  	commit(types.SELECTED_EVENT, item)
   },
   inserted({ commit }, data){
+  	console.log(data);
   	commit(types.INSERTED, data)
   }
 }
@@ -90,9 +54,10 @@ const mutations = {
     state.lists.push(item) 
   },
   [types.INSERTED] (state, data) {
-    data.item.id = state.uid
+
+    state.lists = []
   },
-  [types.SELECTED] (state, item){
+  [types.SELECTED_EVENT] (state, item){
   	state.selected = item
   }
 }

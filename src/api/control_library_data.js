@@ -1,5 +1,5 @@
 import Mock from 'mockjs';
-export default Mock.mock('http://api.com', {
+export default Mock.mock('http://control.com', {
   "label": "Control library",
   "allowedTypes": [
     "page"
@@ -55,3 +55,4 @@ export default Mock.mock('http://api.com', {
   }]
 
 });
+

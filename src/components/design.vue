@@ -1,6 +1,6 @@
 <template>
 <div class="design">
-	{{lists}}
+	
 	<div v-for="list in lists">
 	    <div class="screen">
 			<vddl-list 
@@ -11,32 +11,22 @@
 				:draggable="person"
 				:wrapper="list.people"
 				:index="index"
-				:selected="selected"
+				:selected="selectedEvent"
 				v-bind:class="{'selected': selected === person}"
 				effect-allowed="move">
 				<div class="control-item">
-					<div class="control-label">{{data.labeltext}}</div>
+					<div class="control-label">{{person.labeltext}}</div>
 
-					<div class="control-field" v-if="data.type == 'TEXTBOX'">
-						<input type="text" :value="data.value">
-					</div>
-
-					<div class="control-field" v-if="data.type == 'SELECT'">
-						<select><option v-for="option in data.option" :value="option.value">{{option.text}}</option></select>
-					</div>
-
-					<div class="control-field" v-if="data.type == 'RADIO'">
-						<div v-for="group in data.group">
-							<label>{{group.text}}</label>
-							<input type="radio" :name="group.name" :value="group.value">
-						</div>
-					</div>
+					
 				</div>
 			</vddl-draggable >
-			<vddl-placeholder class="placeholder"></vddl-placeholder>
+			<vddl-placeholder class="placeholder">11111111111111</vddl-placeholder>
 			</vddl-list>
 	    </div>
 	</div> 
+	
+	<pre>{{lists}}</pre>
+	
 </div>
 </template>
 <script>
@@ -45,18 +35,21 @@ import Vddl from 'vddl';
 import { mapGetters, mapActions } from 'vuex';
 Vue.use(Vddl);
 export default {
-  computed: {
-    ...mapGetters({
-    	lists:'lists',
-    }),
-  },
-  created(){
-  	this.$store.dispatch('lists')
-  },
-  methods: {
-  	...mapActions(['inserted','selected'])
-  },
-  components:{}
+	
+	computed: {
+	...mapGetters({
+		lists:'lists',
+		selected:'selected'
+
+	}),
+	},
+	created(){
+		this.$store.dispatch('lists')
+	},
+	methods: {
+		...mapActions(['inserted','selectedEvent'])
+	},
+	components:{}
 }
 </script>
 <style scoped lang="less">
@@ -64,7 +57,11 @@ export default {
 	&:before,
 	&:after{content:" "; display:table; clear:both;}
 }
-.design{width:500px; height:500px; border:1px solid #ccc;}
+.vddl-list {
+    padding-left: 0;
+    min-height: 40px;
+}
+.design{}
 .control-item{ 
 	width: 100%; box-sizing: border-box; padding: 10px 5px; .clearfix(); position: relative;
 	.control-label{width: 30%;  height: 30px; line-height: 30px; font-size: 12px; float: left; white-space: normal; text-overflow: ellipsis; overflow: hidden;
