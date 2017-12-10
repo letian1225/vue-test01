@@ -6,7 +6,7 @@ export default Mock.mock('http://control.com', {
   ],
   "norm": [
   {
-    "type": "TEXTBOX",
+    "type": "text",
     "icon": "fa fa-edit",
     "labeltext": "label",
     "id": "",

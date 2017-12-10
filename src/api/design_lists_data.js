@@ -6,10 +6,34 @@ export default Mock.mock('http://lists.com', {
     ],
     "people": [
       {
-        "type": "TEXTBOX",
+        "type": "text",
         "icon": "fa fa-edit",
-        "labeltext": "label",
-        "id": "",
+        "labeltext": "label1",
+        "id": "1",
+        "name": "",
+        "value": "",
+        "maxLength": "",
+        "readOnly": "",
+        "align": "",
+        "disabled": ""
+      },
+      {
+        "type": "text",
+        "icon": "fa fa-edit",
+        "labeltext": "label2",
+        "id": "2",
+        "name": "",
+        "value": "",
+        "maxLength": "",
+        "readOnly": "",
+        "align": "",
+        "disabled": ""
+      },
+      {
+        "type": "text",
+        "icon": "fa fa-edit",
+        "labeltext": "label3",
+        "id": "3",
         "name": "",
         "value": "",
         "maxLength": "",

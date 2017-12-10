@@ -1,7 +1,7 @@
 <!--All attribute setting-->
 <template>
 	<div class="setting">
-		<div v-for="attr in data">
+		<!-- <div v-for="attr in data">
 		  <h3 class="attr-control-name">{{attr.type}}</h3>
 		  <div v-for="attrList in attrLists">
 		    <div v-if="attrList == 'labeltext'">
@@ -120,45 +120,30 @@
 		    </div>
 
 		  </div>
-		</div>
+		</div> -->
 	</div>
 </template>
 <script>
-import Vue from 'vue'
-import Vddl from 'vddl';
-import { mapGetters, mapActions } from 'vuex';
-Vue.use(Vddl);
-export default {
-  computed: {
-    ...mapGetters({
-      controls:'controls',
-    }),
-  },
-  created(){
-    this.$store.dispatch('controls')
-  },
-  methods: {},
-  components:{}
-}
+// import Vue from 'vue'
+// import Vddl from 'vddl';
+// import { mapGetters, mapActions } from 'vuex';
+// Vue.use(Vddl);
+// export default {
+//   computed: {
+//     ...mapGetters({
+//       controls:'controls',
+//     }),
+//   },
+//   created(){
+//     this.$store.dispatch('controls')
+//   },
+//   methods: {},
+//   components:{}
+// }
 </script>
 <style scoped lang="less">
-.clearfix(){
-	&:before,
-	&:after{content:" "; display:table; clear:both;}
-}
-// .attr-control-name{padding: 10px; background-color: #1d4350; color: #fff;}
-// .attr-item{width: 100%;  .clearfix(); position: relative; border-bottom: 1px solid #ccc;
-// 	.attr-item-label{width: 30%;  height: 30px; line-height: 30px; padding: 0 5px; box-sizing: border-box; font-size: 12px; float: left; white-space: normal; text-overflow: ellipsis; overflow: hidden;
-// 		& + .attr-item-field{width: 70%; float: left;
-// 			&.sm{width: 50px;
-// 				+ a{height: 30px; display: inline-block; line-height: 30px; padding: 0 10px; float: right; box-sizing: border-box; }
-// 			}
-// 		}
-// 		&.sm{width: auto; background-color: #ccc;}
-// 	}
-// 	.attr-item-field{width:100%;
-// 		input[type=text]{width: 100%; height: 30px; padding: 0 5px; box-sizing: border-box; border:0; -webkit-appearance:none; background-color: #fff;}
-// 		select{width: 100%; height: 30px; padding: 0 5px; box-sizing: border-box; border:0; -webkit-appearance:none; background: url("../assets/arrow.png") #fff no-repeat scroll right center ;}
-// 	}
-// }
+
+.setting{width: 500px; height: calc(~"100% - 40px"); position: fixed; right: 0; top:40px; border-left: 1px solid #eee; background-color: #f2f2f2;}
+
+
 </style>

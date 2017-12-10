@@ -4,62 +4,47 @@ import design_lists_data from '../../api/design_lists_data'
 
 import * as types from '../mutation-types'
 const state = {
-	uid:"",
-	selected:"",
-	controls:[],
-	lists: []
+  uid: "",
+  selected: "",
+  controls: [],
 }
 // getters
 const getters = {
   controls: state => state.controls,
-  lists: state => state.lists,
   selected: state => state.selected,
 }
 
 
 // actions
 const actions = {
-  controls({ commit }){
+  controls({ commit }) {
     Vue.http.get("http://control.com")
       .then((res) => {
         commit(types.CONTROLS, res.data)
-      },(error) => {
+      }, (error) => {
         console.log(error)
       });
   },
-  lists({ commit }){
-    Vue.http.get("http://lists.com")
-      .then((res) => {
-        commit(types.LISTS, res.data)
-      },(error) => {
-        console.log(error)
-      });
+  
+  selectedEvent({ commit }, item) {
+    commit(types.SELECTED_EVENT, item)
   },
-  selectedEvent({ commit }, item){
-  	commit(types.SELECTED_EVENT, item)
+  inserted({ commit }, data) {
+    //console.log(data);
+    commit(types.INSERTED, data)
   },
-  inserted({ commit }, data){
-  	console.log(data);
-  	commit(types.INSERTED, data)
-  }
 }
 
 
 // mutations
 const mutations = {
-  [types.CONTROLS] (state, item) {
-    state.controls.push(item) 
+  [types.CONTROLS](state, item) {
+    state.controls.push(item)
   },
-  [types.LISTS] (state, item) {
-    state.lists.push(item) 
+  [types.INSERTED](state, data) {},
+  [types.SELECTED_EVENT](state, item) {
+    state.selected = item
   },
-  [types.INSERTED] (state, data) {
-
-    state.lists = []
-  },
-  [types.SELECTED_EVENT] (state, item){
-  	state.selected = item
-  }
 }
 
 export default {
