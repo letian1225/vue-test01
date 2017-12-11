@@ -1,18 +1,21 @@
 <template>
 <div class="design">
-	<pre>
-		{{lists}}
-	</pre>
+	
 	<div v-for="list in lists" class="design-inner">
-		<draggable v-model="list.people" :options="{group:'forms'}">
-		   <div v-for="person in list.people">
+		<b-container fluid>
+		<draggable v-model="list.people" 
+			:options="{group:'forms',ghostClass:'sortable-ghost',selectedClass:'sortable-ghost'}">
+		   	<div v-for="person in list.people"  class="item" v-bind:class="{'selected': selected === person}" v-on:click="selectedEvent(person)">
 	   			<b-row v-if="person.type == 'text'">
-	   		      <b-col sm="3"><label>{{ person.labeltext }}:</label></b-col>
+	   		      <b-col sm="3"><label class="labeltext">{{ person.labeltext }}:</label></b-col>
 	   		      <b-col sm="9"><b-form-input :type="person.type"></b-form-input></b-col>
 	   		    </b-row>
-		   </div>
+		   	</div>
 		</draggable>
+		</b-container>
 	</div>
+
+	
 
 	
 
@@ -24,17 +27,16 @@
 import Vue from 'vue'
 import draggable from 'vuedraggable'
 import { mapGetters, mapActions } from 'vuex';
-//Vue.use(Vddl);
 export default {
 	data() {
 	   return {
-	     lists: [],
+	     	lists: [],
 	   };
 	},
 	computed: {
-		// ...mapGetters({
-		// 	selected:'selected'
-		// }),
+		...mapGetters({
+			selected:'selected'
+		}),
 	},
 	created(){
 	  	Vue.http.get("http://lists.com")
@@ -45,7 +47,7 @@ export default {
 	    });
 	},
 	methods: {
-		//...mapActions(['inserted','selectedEvent']),
+		...mapActions(['selectedEvent']),
 	},
 	components:{draggable}
 }
@@ -57,20 +59,20 @@ export default {
     min-height: 400px;
 }
 
-.design{width: calc(~"100% - 800px"); height: calc(~"100% - 50px"); overflow: auto; position: fixed; left: 300px; top:50px;
+.design{width: calc(~"100% - 800px"); height: calc(~"100% - 40px"); overflow: auto; position: fixed; left: 300px; top:40px;
   &::-webkit-scrollbar {width:2px;height:2px;}
   &::-webkit-scrollbar-track-piece {background:#EEE;-webkit-border-radius:6px;}
   &::-webkit-scrollbar-thumb:vertical {background:#555;-webkit-border-radius:6px;}
   &::-webkit-scrollbar-thumb:horizontal {background:#555;-webkit-border-radius:6px;}
   .design-inner{
-    .screen{
-      .vddl-draggable{width: 100%; margin: 4px 0; padding: 4px; position: relative;
-      	&:after{content: ""; position: absolute; left: 0; top:0; width: 100%; height: 100%;}
-      }
-      .vddl-draggable.selected{border-radius: 0.25rem; box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);}
-    }
-    .placeholder{width: 100%; height: 50px; float: left; border-top:1px dashed #999; border-bottom:1px dashed #999;}
+  	.design-inner{}
+    .sortable-ghost{width: 100%; float: left; background-color: #f2f2f2; }
+    .item{margin: 10px 0; padding: 5px; float: left; width: 100%;
+    	.labeltext{margin:5px 0 0 0;}
+     }
+    .selected{ box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); border-radius: 5px;}
   }
+
 }
 
 </style>
