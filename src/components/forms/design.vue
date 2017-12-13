@@ -1,78 +1,106 @@
 <template>
 <div class="design">
-	
-	<div v-for="list in lists" class="design-inner">
-		<b-container fluid>
-		<draggable v-model="list.people" 
-			:options="{group:'forms',ghostClass:'sortable-ghost',selectedClass:'sortable-ghost'}">
-		   	<div v-for="person in list.people"  class="item" v-bind:class="{'selected': selected === person}" v-on:click="selectedEvent(person)">
-	   			<b-row v-if="person.type == 'text'">
-	   		      <b-col sm="3"><label class="labeltext">{{ person.labeltext }}:</label></b-col>
-	   		      <b-col sm="9"><b-form-input :type="person.type"></b-form-input></b-col>
-	   		    </b-row>
-		   	</div>
-		</draggable>
-		</b-container>
+
+
+
+	<div class="forms">
+		<ui-alert @dismiss="showAlert1 = false" v-show="showAlert1">
+            Hi everybody! This is the default alert.
+        </ui-alert>
+        <ui-radio-group :name="group1" v-model="group1" :options="['Ned', 'Rod', 'Todd']">Favourite Flanders</ui-radio-group>
+        <ui-select
+            label="Favourite colour"
+            placeholder="Select a colour"
+            :options="['Ned', 'Rod', 'Todd']"
+            v-model="select1">
+            	
+        </ui-select>
+		<div v-for="list in lists" class="forms-inner">
+			<vddl-list 
+	          :list="list.people" 
+	          :external-sources="true"
+	          :inserted="inserted">
+	          <vddl-draggable v-for="(person, index) in list.people" :key="person.id"
+	            :draggable="person"
+	            :wrapper="list.people"
+	            :index="index"
+	            :selected="selectedEvent"
+	            v-bind:class="{'selected': selected === person}"
+	            effect-allowed="move">
+
+	            <div v-if="person.type == 'text'">
+	   				<ui-textbox floating-label :label="person.labeltext" placeholder="Enter your name" v-model="person.value" ></ui-textbox>
+	   			</div>
+
+	          </vddl-draggable >
+
+	          <vddl-placeholder class="placeholder">3333</vddl-placeholder>
+
+	        </vddl-list>
+		</div>
+
+		<pre>{{lists}}</pre>
 	</div>
 
-	
-
-	
 
 
-	
+	<div class="attribute">
+		<div class="attribute-inner">
+			
+			<div v-if="attribute.labeltext">
+				<input type="text" v-model="attribute.labeltext">
+			</div>
+			<pre>{{attribute}}</pre>
+		</div>
+	</div>
+
+
 </div>
 </template>
 <script>
 import Vue from 'vue'
-import draggable from 'vuedraggable'
-import { mapGetters, mapActions } from 'vuex';
+import design_lists_data from '../../api/design_lists_data'
+import Vddl from 'vddl'
+import { UiTextbox, UiButton, UiMenu, UiAlert, UiSwitch, UiTab, UiTabs, UiRadio, UiRadioGroup, UiCheckbox, UiCheckboxGroup, UiSelect, UiCollapsible, UiPopover, UiPreloader, UiConfirm, UiFileupload, UiModal } from 'keen-ui'
+Vue.use(Vddl)
 export default {
 	data() {
 	   return {
 	     	lists: [],
+	     	attribute:[],
+	     	selected:"",
+	     	group1:"",
+	     	select1:"",
+	     	showAlert1:true
 	   };
 	},
-	computed: {
-		...mapGetters({
-			selected:'selected'
-		}),
-	},
+	computed: {},
 	created(){
 	  	Vue.http.get("http://lists.com")
 	    .then((res) => {
 	    	this.lists.push(res.data);
-	    }, (error) => {
-	      console.log(error)
-	    });
+	    }, (error) => {});
 	},
 	methods: {
-		...mapActions(['selectedEvent']),
+		selectedEvent(person){
+			this.attribute = person
+			this.selected = person
+		},
+		createUID(){
+			return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+			    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8)
+			    return v.toString(16)
+			})
+		},
+		inserted(data){
+			data.item.id = this.createUID()
+		}
 	},
-	components:{draggable}
+	components:{
+		UiTextbox, UiButton, UiMenu, UiAlert, UiSwitch, UiTab, UiTabs, UiRadio, UiRadioGroup, UiCheckbox, UiCheckboxGroup, UiSelect, UiCollapsible, UiPopover, UiPreloader, UiConfirm, UiFileupload, UiModal
+	}
 }
 </script>
 <style scoped lang="less">
-
-.vddl-list {
-    padding-left: 0;
-    min-height: 400px;
-}
-
-.design{width: calc(~"100% - 800px"); height: calc(~"100% - 40px"); overflow: auto; position: fixed; left: 300px; top:40px;
-  &::-webkit-scrollbar {width:2px;height:2px;}
-  &::-webkit-scrollbar-track-piece {background:#EEE;-webkit-border-radius:6px;}
-  &::-webkit-scrollbar-thumb:vertical {background:#555;-webkit-border-radius:6px;}
-  &::-webkit-scrollbar-thumb:horizontal {background:#555;-webkit-border-radius:6px;}
-  .design-inner{
-  	.design-inner{}
-    .sortable-ghost{width: 100%; float: left; background-color: #f2f2f2; }
-    .item{margin: 10px 0; padding: 5px; float: left; width: 100%;
-    	.labeltext{margin:5px 0 0 0;}
-     }
-    .selected{ box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); border-radius: 5px;}
-  }
-
-}
-
+	.vddl-list{min-height: 100px;}
 </style>

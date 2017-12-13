@@ -2,31 +2,27 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import VueResource from 'vue-resource'
-import store from './store'
 import App from './App'
 import router from './router'
-import BootstrapVue from 'bootstrap-vue'
 
-
+import KeenUI from 'keen-ui'
+import 'keen-ui/dist/keen-ui.css'
 
 import 'font-awesome/css/font-awesome.css'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
 import './less/common.less'
 
-Vue.use(BootstrapVue);
+
+
+
+
+
 Vue.use(VueResource)
+Vue.use(KeenUI)
 Vue.config.productionTip = false
-
-
-
-
-
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  store,
   router,
   template: '<App/>',
   components: { App }

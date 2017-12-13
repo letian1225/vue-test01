@@ -19,7 +19,7 @@ export default {
   methods:{
     foo:function(){
       if(this.uname !== "" && this.upass !== ""){
-        this.$router.push('home')
+        this.$router.push('form')
       }
       console.log(this.uname);
       console.log(this.upass);

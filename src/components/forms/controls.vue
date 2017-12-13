@@ -1,51 +1,60 @@
 <template>
-	<div class="controls-list">
-		<div v-for="control in controls" class="controls-list-inner">
-			<draggable v-model="control.norm" :options="{group:{ name:'forms',  pull:'clone', put:false }, sort:false}">
-			   <div v-for="norm in control.norm" class="item">
-				  	<i :class="norm.icon"></i>
-	          		<span>{{norm.type}}</span>
-			   </div>
-			</draggable>
-		</div>
-	</div>
-</template>
-<script>
-import draggable from 'vuedraggable'
-import { mapGetters, mapActions } from 'vuex';
-export default {
-  computed: {
-    ...mapGetters({
-      controls:'controls',
-    }),
-  },
-  created(){
-    this.$store.dispatch('controls')
-  },
-  methods: {
-  	moveEvent:function(evt,originalEvent){
 
-  	
+	<div class="controls-list">
+		<div v-for="list in controls" class="controls-list-inner">
+			<vddl-list :list="list.norm" :allowed-types="list.norm">
+				<vddl-draggable v-for="(norm, index) in list.norm" :key="norm.type"
+				  :draggable="norm"
+				  :wrapper="list.norm"
+				  :index="index"
+				  :copied="copied"
+				  effect-allowed="copy">
+				  	<span>{{norm.type}}</span>
+				</vddl-draggable>
+			</vddl-list>
+		</div>
+		
+	</div>
+
+
+
+</template>
+
+
+
+<script>
+import Vue from 'vue'
+import control_library_data from '../../api/control_library_data'
+import Vddl from 'vddl'
+
+
+Vue.use(Vddl)
+
+export default {
+	data() {
+	   return {
+	     	controls: [],
+	     	
+	   };
+	},
+  	computed: {},
+  	created(){
+	   	Vue.http.get("http://control.com")
+	      .then((res) => {
+	      	this.controls.push(res.data);
+	      }, (error) => {});
+  	},
+  	methods: {
+		copied(){
+			
+		}
+  	},
+  	components:{
+  		
   	}
-  },
-  components:{draggable}
 }
 </script>
 <style scoped lang="less">
-
-.controls-classify-name{padding: 10px; background-color: #1d4350; color: #fff;}
-.controls-list{width: 300px;  height: calc(~"100% - 40px");  position: fixed; left: 0; top:40px; background-color: #f2f2f2; 
-	.controls-list-inner{
-		.item{width: 100%; height: 40px; line-height: 40px; background-color: #fff; border-bottom: 1px solid #eee;cursor: move; padding: 0 10px; box-sizing: border-box;
-	  		i{font-size: 16px; display: inline-block; width: 20px;}
-	  		span{}
-	  		&:hover{background-color: #eee;}
-		}
-	}
-}
-  
-
-
-
+	
 </style>
 
