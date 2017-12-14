@@ -1,67 +1,51 @@
 <template>
 <div class="design">
+	<el-row>
+	  <el-col :span="16">
+	  		<div v-for="list in lists" class="forms">
+	  			<vddl-list 
+	  	          	:list="list.people" 
+	  	          	:external-sources="true"
+	  	          	:inserted="inserted">
+	  	          	<el-form ref="form" label-width="80px">
+		  	          	<vddl-draggable v-for="(person, index) in list.people" :key="person.id"
+			  	            :draggable="person"
+			  	            :wrapper="list.people"
+			  	            :index="index"
+			  	            :selected="selectedEvent"
+			  	            v-bind:class="{'selected': selected === person}"
+			  	            effect-allowed="move">
+			  	            
+			  	   			<el-form-item :label="person.labeltext" v-if="person.type == 'text'">
+			  	   			  <el-input></el-input>
+			  	   			</el-form-item>
 
+		  	          	</vddl-draggable >
+		  	          	<vddl-placeholder class="placeholder">3333</vddl-placeholder>
+					</el-form>
+	  	        </vddl-list>
+	  		</div>
+	  </el-col>
+	  <el-col :span="8">
+	  	<div class="attribute">
+	  		
+			<!--
+	  		<el-form ref="form" label-width="80px">
+	  		  <el-form-item label="名称" v-if="attribute.labeltext">
+	  		    <el-input v-model="attribute.labeltext"></el-input>
+	  		  </el-form-item>
+	  		</el-form>
+	  		-->
 
-
-	<div class="forms">
-		<ui-alert @dismiss="showAlert1 = false" v-show="showAlert1">
-            Hi everybody! This is the default alert.
-        </ui-alert>
-        <ui-radio-group :name="group1" v-model="group1" :options="['Ned', 'Rod', 'Todd']">Favourite Flanders</ui-radio-group>
-        <ui-select
-            label="Favourite colour"
-            placeholder="Select a colour"
-            :options="['Ned', 'Rod', 'Todd']"
-            v-model="select1">
-            	
-        </ui-select>
-		<div v-for="list in lists" class="forms-inner">
-			<vddl-list 
-	          :list="list.people" 
-	          :external-sources="true"
-	          :inserted="inserted">
-	          <vddl-draggable v-for="(person, index) in list.people" :key="person.id"
-	            :draggable="person"
-	            :wrapper="list.people"
-	            :index="index"
-	            :selected="selectedEvent"
-	            v-bind:class="{'selected': selected === person}"
-	            effect-allowed="move">
-
-	            <div v-if="person.type == 'text'">
-	   				<ui-textbox floating-label :label="person.labeltext" placeholder="Enter your name" v-model="person.value" ></ui-textbox>
-	   			</div>
-
-	          </vddl-draggable >
-
-	          <vddl-placeholder class="placeholder">3333</vddl-placeholder>
-
-	        </vddl-list>
-		</div>
-
-		<pre>{{lists}}</pre>
-	</div>
-
-
-
-	<div class="attribute">
-		<div class="attribute-inner">
-			
-			<div v-if="attribute.labeltext">
-				<input type="text" v-model="attribute.labeltext">
-			</div>
-			<pre>{{attribute}}</pre>
-		</div>
-	</div>
-
-
+	  	</div>
+	  </el-col>
+	</el-row>
 </div>
 </template>
 <script>
 import Vue from 'vue'
 import design_lists_data from '../../api/design_lists_data'
 import Vddl from 'vddl'
-import { UiTextbox, UiButton, UiMenu, UiAlert, UiSwitch, UiTab, UiTabs, UiRadio, UiRadioGroup, UiCheckbox, UiCheckboxGroup, UiSelect, UiCollapsible, UiPopover, UiPreloader, UiConfirm, UiFileupload, UiModal } from 'keen-ui'
 Vue.use(Vddl)
 export default {
 	data() {
@@ -69,9 +53,6 @@ export default {
 	     	lists: [],
 	     	attribute:[],
 	     	selected:"",
-	     	group1:"",
-	     	select1:"",
-	     	showAlert1:true
 	   };
 	},
 	computed: {},
@@ -96,9 +77,7 @@ export default {
 			data.item.id = this.createUID()
 		}
 	},
-	components:{
-		UiTextbox, UiButton, UiMenu, UiAlert, UiSwitch, UiTab, UiTabs, UiRadio, UiRadioGroup, UiCheckbox, UiCheckboxGroup, UiSelect, UiCollapsible, UiPopover, UiPreloader, UiConfirm, UiFileupload, UiModal
-	}
+	components:{}
 }
 </script>
 <style scoped lang="less">

@@ -1,8 +1,47 @@
 *,
 *::before,
 *::after {
-    box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
-html {
-    font-size: 100%;
+
+html,
+body {
+  font-size: 100%;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+a {
+  text-decoration: none;
+}
+
+.el-header {
+  padding: 0;
+}
+
+.page-title {
+  margin: 0 0 20px;
+  span {
+    font-size: 20px;
+  }
+}
+
+.breadcrumb {
+  margin: 0 0 30px;
+}
+
+.table {
+  margin: 0 0 30px;
 }

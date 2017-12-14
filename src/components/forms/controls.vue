@@ -1,20 +1,34 @@
 <template>
 
 	<div class="controls-list">
-		<div v-for="list in controls" class="controls-list-inner">
-			<vddl-list :list="list.norm" :allowed-types="list.norm">
-				<vddl-draggable v-for="(norm, index) in list.norm" :key="norm.type"
-				  :draggable="norm"
-				  :wrapper="list.norm"
-				  :index="index"
-				  :copied="copied"
-				  effect-allowed="copy">
-				  	<span>{{norm.type}}</span>
-				</vddl-draggable>
-			</vddl-list>
-		</div>
+
+
+		<el-menu>
+			<div v-for="list in controls">
+				<vddl-list :list="list.norm" :allowed-types="list.norm">
+					<vddl-draggable v-for="(norm, index) in list.norm" :key="norm.type"
+					  :draggable="norm"
+					  :wrapper="list.norm"
+					  :index="index"
+					  :copied="copied"
+					  effect-allowed="copy">
+					  	
+					  	  <el-menu-item :index="norm.type">
+					  	      <!-- <i class="el-icon-location"></i>
+					  	      <span slot="title">{{index}}</span> -->
+					  	  </el-menu-item>
+					  	 
+
+					  	
+					</vddl-draggable>
+				</vddl-list>
+			</div>
+		</el-menu>
+
 		
 	</div>
+
+
 
 
 

@@ -2,7 +2,7 @@
   <div>
     <input type="text" v-model="uname">
     <input type="text" v-model="upass">
-    <a href="javascript:void(0);" v-on:click="foo()">submit</a>
+    <a href="javascript:void(0);" v-on:click="login()">submit</a>
   </div>
 </template>
 
@@ -14,15 +14,16 @@ export default {
     return {
       uname:"",
       upass:""
+
     }
   },
   methods:{
-    foo:function(){
+    login:function(){
       if(this.uname !== "" && this.upass !== ""){
         this.$router.push('form')
+      }else{
+        
       }
-      console.log(this.uname);
-      console.log(this.upass);
     }
   }
 }

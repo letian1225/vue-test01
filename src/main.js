@@ -4,11 +4,8 @@ import Vue from 'vue'
 import VueResource from 'vue-resource'
 import App from './App'
 import router from './router'
-
-import KeenUI from 'keen-ui'
-import 'keen-ui/dist/keen-ui.css'
-
-import 'font-awesome/css/font-awesome.css'
+import Element from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 import './less/common.less'
 
 
@@ -17,7 +14,8 @@ import './less/common.less'
 
 
 Vue.use(VueResource)
-Vue.use(KeenUI)
+Vue.use(Element)
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
