@@ -5,8 +5,8 @@
       <a href="javascript:void(0);" class="toogle-side-menu" v-on:click="isCollapse=!isCollapse"></a>
       <el-submenu index="1">
         <template slot="title">
-          <i class="el-icon-location"></i>
-          <span slot="title">导航一</span>
+          <i class="el-icon-menu"></i>
+          <span slot="title">模块管理</span>
         </template>
         <el-menu-item-group>
           <span slot="title">分组一</span>
@@ -23,11 +23,11 @@
       </el-submenu>
       <el-menu-item index="2">
         <i class="el-icon-menu"></i>
-        <span slot="title">导航二</span>
+        <span slot="title">工作流管理</span>
       </el-menu-item>
       <el-menu-item index="3">
         <i class="el-icon-setting"></i>
-        <span slot="title">导航三</span>
+        <span slot="title">表单管理</span>
       </el-menu-item>
     </el-menu>
   </div>

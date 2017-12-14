@@ -2,40 +2,47 @@
 <div class="design">
 	<el-row>
 	  <el-col :span="16">
-	  		<div v-for="list in lists" class="forms">
+	  		<div v-for="item in lists" class="forms">
 	  			<vddl-list 
-	  	          	:list="list.people" 
+	  	          	:list="item.list" 
 	  	          	:external-sources="true"
 	  	          	:inserted="inserted">
-	  	          	<el-form ref="form" label-width="80px">
-		  	          	<vddl-draggable v-for="(person, index) in list.people" :key="person.id"
-			  	            :draggable="person"
-			  	            :wrapper="list.people"
+		  	          	<vddl-draggable v-for="(list, index) in item.list" :key="list.uid"
+			  	            :draggable="list"
+			  	            :wrapper="item.list"
 			  	            :index="index"
 			  	            :selected="selectedEvent"
-			  	            v-bind:class="{'selected': selected === person}"
+			  	            v-bind:class="{'selected': selected === list}"
 			  	            effect-allowed="move">
 			  	            
-			  	   			<el-form-item :label="person.labeltext" v-if="person.type == 'text'">
-			  	   			  <el-input></el-input>
-			  	   			</el-form-item>
+			  	   			<div v-if="list.wfw_name == 'dropdownlist'">
+			  	   				<label>{{list.wfw_name_ch}}</label>
+			  	   				<select></select>
+			  	   			</div>
+
+			  	   			
 
 		  	          	</vddl-draggable >
-		  	          	<vddl-placeholder class="placeholder">3333</vddl-placeholder>
-					</el-form>
+		  	          	<vddl-placeholder class="placeholder"></vddl-placeholder>
 	  	        </vddl-list>
 	  		</div>
 	  </el-col>
 	  <el-col :span="8">
 	  	<div class="attribute">
-	  		
-			<!--
-	  		<el-form ref="form" label-width="80px">
-	  		  <el-form-item label="名称" v-if="attribute.labeltext">
-	  		    <el-input v-model="attribute.labeltext"></el-input>
+	  		<el-form ref="form" label-width="80px" v-if="attribute.wfw_name == 'dropdownlist'">
+	  		  <el-form-item label="名称">
+	  		    <el-input v-model="attribute.wfw_name_ch"></el-input>
+	  		  </el-form-item>
+	  		  <el-form-item label="类型">
+	  		  	<div v-for="item in attribute.wfwq_type">
+	  		  		<el-radio v-model="attribute.wfwq_type_selected" :label="item.wfwq_id">{{item.wfwq_name_ch}}</el-radio>
+	  		  	</div>
 	  		  </el-form-item>
 	  		</el-form>
-	  		-->
+			<pre>{{value}}</pre>
+			<pre>{{lists}}</pre>
+	  		
+	  		
 
 	  	</div>
 	  </el-col>
@@ -53,6 +60,7 @@ export default {
 	     	lists: [],
 	     	attribute:[],
 	     	selected:"",
+	     	value:"",
 	   };
 	},
 	computed: {},
@@ -74,12 +82,15 @@ export default {
 			})
 		},
 		inserted(data){
-			data.item.id = this.createUID()
+			data.item.uid = this.createUID()
 		}
 	},
 	components:{}
 }
 </script>
 <style scoped lang="less">
-	.vddl-list{min-height: 100px;}
+	.forms{ width: 360px; padding: 20px; border:1px solid #e6e6e6; float: left;}
+	.vddl-list{ width: 100%; min-height: 700px; float: left;}
+	.vddl-draggable{width: 100%; height: 50px; line-height: 50px; background-color: #f9f9f9; margin: 5px 0; float: left;}
+	.placeholder{width: 100%; height: 50px; line-height: 50px; background-color: #ddd; margin: 5px 0; float: left;}
 </style>

@@ -4,18 +4,19 @@
 
 
 		<el-menu>
-			<div v-for="list in controls">
-				<vddl-list :list="list.norm" :allowed-types="list.norm">
-					<vddl-draggable v-for="(norm, index) in list.norm" :key="norm.type"
-					  :draggable="norm"
-					  :wrapper="list.norm"
+
+			<div v-for="item in controls">
+				<vddl-list :list="item.list" :allowed-types="item.list">
+					<vddl-draggable v-for="(list, index) in item.list" :key="list.type"
+					  :draggable="list"
+					  :wrapper="item.list"
 					  :index="index"
 					  :copied="copied"
 					  effect-allowed="copy">
 					  	
-					  	  <el-menu-item :index="norm.type">
-					  	      <!-- <i class="el-icon-location"></i>
-					  	      <span slot="title">{{index}}</span> -->
+					  	  <el-menu-item :index="list.wfw_id">
+					  	      <i class="el-icon-news"></i>
+					  	      <span slot="title">{{list.wfw_name_ch}}</span>
 					  	  </el-menu-item>
 					  	 
 
@@ -69,6 +70,6 @@ export default {
 }
 </script>
 <style scoped lang="less">
-	
+	.controls-list{}
 </style>
 

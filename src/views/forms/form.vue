@@ -3,12 +3,12 @@
     <el-container>
       <el-header>
           <el-menu class="el-menu-demo" mode="horizontal">
-            <el-menu-item index="1"></el-menu-item>
+
             <el-submenu index="2">
-              <template slot="title"></template>
-              <el-menu-item index="2-1"></el-menu-item>
-              <el-menu-item index="2-2"></el-menu-item>
-              <el-menu-item index="2-3"></el-menu-item>
+              <template slot="title">菜单</template>
+              <el-menu-item index="2-1">新建表单</el-menu-item>
+              <el-menu-item index="2-2">保存表单</el-menu-item>
+              <el-menu-item index="2-3">控制台</el-menu-item>
             </el-submenu>
             <el-menu-item index="3"><a href="https://www.ele.me" target="_blank"></a></el-menu-item>
           </el-menu>

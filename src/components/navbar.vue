@@ -1,20 +1,21 @@
 <template>
   <div>
-    <el-menu 
+    <el-menu
     	:default-active="activeIndex" 
-    	background-color="#545c64"
-	  	text-color="#fff"
-	  	active-text-color="#ffd04b"
+      router
     	mode="horizontal" 
+      background-color="#545c64"
+      text-color="#fff"
+      active-text-color="#ffd04b"
     	@select="handleSelect">
-      	<el-menu-item index="1">处理中心</el-menu-item>
-	      	<el-submenu index="2">
-		        <template slot="title">我的工作台</template>
-		        <el-menu-item index="2-1">选项1</el-menu-item>
-		        <el-menu-item index="2-2">选项2</el-menu-item>
-		        <el-menu-item index="2-3">选项3</el-menu-item>
-	      	</el-submenu>
-      	<el-menu-item index="3"><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item>
+      	<el-menu-item index="home" style="margin:0 0 0 200px;">主页</el-menu-item>
+        <el-menu-item index="form" >创建表单</el-menu-item>
+      	<el-submenu index="9" style="float:right; margin:0 20px 0 0;">
+	        <template slot="title">当前登录用户：Eason</template>
+	        <el-menu-item index="9-1">个人设置</el-menu-item>
+	        <el-menu-item index="9-2">退出登录</el-menu-item>
+      	</el-submenu>
+
     </el-menu>
   </div>
 </template>
