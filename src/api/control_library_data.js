@@ -51,12 +51,50 @@ export default Mock.mock('http://control.com', {
             "wfw_name_ch": "下拉列表",
             "wfw_abled": "1",
             "wfw_icon": "",
+            //示例：是否隐藏，如果隐藏我会改为true,
+            "wfw_display":"false", 
 
-            "wfwq_type_selected":"1", 
-            /*
-              关联'wfwq_type'属性要有一个记录选中的'wfwq_type_selected'字段，页面设置完会把'wfwq_id'放进去，给个默认值1，也就是默认'wfwq_id'为1，
-              我这边展现的时候，会显示默认'wfwq_id'为1的选中。
-            */
+            // 示例：这种我用于显示下拉框的默认值，你需要把初始字段加上，也就是现在展示的结构
+            "wfw_option":[ 
+              {
+                value:"",
+                text:""
+              }
+              ],
+
+              // 示例：你这边有默认属性，我设置
+              // 关联'wfwq_type'属性要有一个记录选中的'wfwq_type_selected'字段，页面设置完会把'wfwq_id'放进去，给个默认值1，也就是默认'wfwq_id'为1，
+              // 我这边展现的时候，会显示默认'wfwq_id'为1的选中。
+              // 这种属性我会用下拉菜单，或者单选按钮展示，'wfwq_type' 只是一个APP端展现方式
+              "wfwq_type_selected":"1", 
+              "wfwq_type": [
+                  {
+                      "wfwq_id": "1",
+                      "wfwq_name": "down",
+                      "wfwq_name_ch": "向下展开",
+                      "wfwq_wfw_id": "2",
+                      "wfwq_desc": "向下展开",
+                      "wfwq_abled": "1",
+                  },
+                  {
+                      "wfwq_id": "2",
+                      "wfwq_name": "page",
+                      "wfwq_name_ch": "跳页展开",
+                      "wfwq_wfw_id": "2",
+                      "wfwq_desc": "跳页展开",
+                      "wfwq_abled": "1",
+                  },
+                  {
+                      "wfwq_id": "3",
+                      "wfwq_name": "selector",
+                      "wfwq_name_ch": "选择器",
+                      "wfwq_wfw_id": "2",
+                      "wfwq_desc": "选择器",
+                      "wfwq_abled": "1",
+                  }
+              ],
+
+            
             "wfwq_type": [
                 {
                     "wfwq_id": "1",
