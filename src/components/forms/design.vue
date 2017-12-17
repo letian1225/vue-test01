@@ -28,23 +28,27 @@
 	  		</div>
 	  </el-col>
 	  <el-col :span="8">
-	  	<div class="attribute">
-	  		<el-form ref="form" label-width="80px" v-if="attribute.wfw_name == 'dropdownlist'">
+	  	<div class="attribute" v-if="attribute.length > 0">
+	  		<pre>{{attribute[0].wfw_name}}</pre>
+
+	  		<el-form ref="form" label-width="80px">
 	  		  <el-form-item label="名称">
-	  		    <el-input v-model="attribute.wfw_name_ch"></el-input>
+	  		    <el-input v-model="attribute[0].wfw_attr[0].labelName"></el-input>
 	  		  </el-form-item>
-	  		  <el-form-item label="类型">
-	  		  	<div v-for="item in attribute.wfwq_type">
-	  		  		<el-radio v-model="attribute.wfwq_type_selected" :label="item.wfwq_id">{{item.wfwq_name_ch}}</el-radio>
-	  		  	</div>
-	  		  </el-form-item>
+	  		  
+	  		  <div v-if="attribute[0].wfw_name == 'listBox'">
+		  		  <el-form-item label="类型">
+		  		  	<div v-for="item in attribute[0].wfw_attr[0].type">
+		  		  		<el-radio v-model="attribute[0].wfw_attr[0].type_selected" :label="item.wfwq_id">{{item.wfwq_name_ch}}</el-radio>
+		  		  	</div>
+		  		  </el-form-item>
+	  		  </div>
+	  		
 	  		</el-form>
 			<pre>{{value}}</pre>
 			<pre>{{lists}}</pre>
-	  		
-	  		
-
 	  	</div>
+	  	
 	  </el-col>
 	</el-row>
 </div>
@@ -72,8 +76,10 @@ export default {
 	},
 	methods: {
 		selectedEvent(person){
-			this.attribute = person
+			this.attribute = []
+			this.attribute.push(person)
 			this.selected = person
+
 		},
 		createUID(){
 			return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {

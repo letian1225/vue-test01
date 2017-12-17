@@ -5,6 +5,7 @@ import Login from '@/components/login'
 //views
 import Home from '@/views/home/home'
 import Form from '@/views/forms/form'
+import Control from '@/views/forms/control'
 
 Vue.use(Router)
 
@@ -24,6 +25,11 @@ export default new Router({
       path: '/form',
       name: 'Form',
       component: Form
+    },
+    {
+      path: '/forms/control',
+      name: 'Control',
+      component: Control
     },
   ]
 })

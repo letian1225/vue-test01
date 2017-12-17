@@ -17,6 +17,7 @@ import './less/common.less'
 Vue.use(VueResource)
 Vue.use(Element)
 
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

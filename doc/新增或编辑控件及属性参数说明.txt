@@ -1,0 +1,51 @@
+新增控件及属性时的格式
+
+wfw_id = '0';// 编辑时传当前id,新增时可以不传
+
+wfw_name = 'dptTree';// 控件名称
+wfw_name_ch = '部门树';//控件中文名
+wfw_abled = 1;//控件是否可用
+wfw_icon = '';//控件图标
+
+// 控件所有属性
+wfw_info = '[{"dataSource":"","wfw_option":[{"value":"","text":""}],"wfwq_type_selected":"1","wfwq_type":[{"wfwq_id":"1","wfwq_name":"down","wfwq_name_ch":"向下展开","wfwq_wfw_id":"2","wfwq_desc":"向下展开","wfwq_abled":"1"},{"wfwq_id":"2","wfwq_name":"page","wfwq_name_ch":"跳页展开","wfwq_wfw_id":"2","wfwq_desc":"跳页展开","wfwq_abled":"1"},{"wfwq_id":"3","wfwq_name":"selector","wfwq_name_ch":"选择器","wfwq_wfw_id":"2","wfwq_desc":"选择器","wfwq_abled":"1"}]}]';
+
+// 属性未压缩前
+[
+    {
+        "dataSource": "",
+        "wfw_option": [
+            {
+                "value": "",
+                "text": ""
+            }
+        ],
+        "wfwq_type_selected": "1",
+        "wfwq_type": [
+            {
+                "wfwq_id": "1",
+                "wfwq_name": "down",
+                "wfwq_name_ch": "向下展开",
+                "wfwq_wfw_id": "2",
+                "wfwq_desc": "向下展开",
+                "wfwq_abled": "1"
+            },
+            {
+                "wfwq_id": "2",
+                "wfwq_name": "page",
+                "wfwq_name_ch": "跳页展开",
+                "wfwq_wfw_id": "2",
+                "wfwq_desc": "跳页展开",
+                "wfwq_abled": "1"
+            },
+            {
+                "wfwq_id": "3",
+                "wfwq_name": "selector",
+                "wfwq_name_ch": "选择器",
+                "wfwq_wfw_id": "2",
+                "wfwq_desc": "选择器",
+                "wfwq_abled": "1"
+            }
+        ]
+    }
+]

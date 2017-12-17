@@ -1,7 +1,6 @@
 <template>
   <div>
-   	
-    <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+    <el-menu :default-active="$route.path" class="el-menu-vertical-demo" unique-opened @open="handleOpen" @close="handleClose" :collapse="isCollapse" router>
       <a href="javascript:void(0);" class="toogle-side-menu" v-on:click="isCollapse=!isCollapse"></a>
       <el-submenu index="1">
         <template slot="title">
@@ -33,7 +32,7 @@
         </template>
         <el-menu-item-group>
           <el-menu-item index="3-1">表单管理</el-menu-item>
-          <el-menu-item index="3-2">控件管理</el-menu-item>
+          <el-menu-item index="/forms/control">控件管理</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
 
