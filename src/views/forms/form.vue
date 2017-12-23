@@ -15,10 +15,9 @@
       </el-header>
       <el-container>
         <el-aside width="200px">
-
           <controls></controls>
         </el-aside>
-        <el-main>
+        <el-main style="padding:0">
           <design></design>
         </el-main>
       </el-container>
