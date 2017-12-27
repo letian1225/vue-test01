@@ -5,6 +5,7 @@ import VueResource from 'vue-resource'
 import App from './App'
 import router from './router'
 import Element from 'element-ui'
+import VueHighlightJS from 'vue-highlightjs'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'font-awesome/css/font-awesome.css'
 import './less/common.less'
@@ -16,7 +17,8 @@ import './less/common.less'
 
 Vue.use(VueResource)
 Vue.use(Element)
-
+Vue.use(router)
+Vue.use(VueHighlightJS)
 
 Vue.config.productionTip = false
 

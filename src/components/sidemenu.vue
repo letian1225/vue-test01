@@ -31,7 +31,7 @@
           <span slot="title">表单</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="3-1">表单管理</el-menu-item>
+          <el-menu-item index="/forms/list">表单管理</el-menu-item>
           <el-menu-item index="/forms/control">控件管理</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
