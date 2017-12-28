@@ -6,6 +6,7 @@ import Login from '@/components/login'
 import Home from '@/views/home/home'
 import Form from '@/views/forms/form'
 import Control from '@/views/forms/control'
+import DataSource from '@/views/forms/dataSource'
 import List from '@/views/forms/list'
 
 Vue.use(Router)
@@ -31,6 +32,11 @@ export default new Router({
       path: '/forms/control',
       name: 'Control',
       component: Control
+    },
+    {
+      path: '/forms/dataSource',
+      name: 'DataSource',
+      component: DataSource
     },
     {
       path: '/forms/list',

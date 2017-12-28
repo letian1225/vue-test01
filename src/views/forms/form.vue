@@ -2,8 +2,8 @@
   <div>
     <header>
       <el-button-group >
-        <el-button icon="fa fa-arrow-circle-o-left" @click="$router.push('home')"> 返回</el-button>
-        <el-button icon="fa fa-save" @click="dialogCreateFormVisible = true"> 保存</el-button>
+        <el-button icon="fa fa-arrow-circle-o-left" @click="$router.push('forms/list')"> 返回</el-button>
+        <el-button icon="fa fa-save" @click="dialogCreateFormVisible = true"> 保存表单</el-button>
         <el-button icon="fa fa-code" @click="dialogConsoleVisible = true"> 控制台</el-button>
       </el-button-group>
 
@@ -263,9 +263,9 @@ export default {
     onCreateFormSubmit(){
       let wff_id = this.$route.query.wff_id
       if(wff_id !== undefined){
-        if(wff_id === 0){
+        if(wff_id == 0){
           //新建
-          this.editWfForms("0")
+          this.editWfForms(0)
         }else{
           //编辑
           this.editWfForms(wff_id)
@@ -276,14 +276,24 @@ export default {
     //根据表单ID取得指定的表单数据
     listWfForms(){
       let wff_id = this.$route.query.wff_id
+
       if(wff_id !== undefined){
-        if(wff_id === 0){
+
+        if(wff_id == 0){
           //新建
         }else{
           //编辑
           Vue.http.jsonp("http://milibangong.cn/Appservice/Forms/listWfForms",{params: { wff_id: wff_id}})
              .then((res) => {
-                console.log( res.data.list)
+              for(let x in res.data.list){
+                this.formJson.wff_name = res.data.list[x].wff_name
+                this.formJson.wff_company = res.data.list[x].wff_company
+                this.formJson.wff_module = res.data.list[x].wff_module
+                this.formJson.wff_workflow = res.data.list[x].wff_workflow
+                this.formJson.wff_node = res.data.list[x].wff_node
+                this.formJson.wff_json = JSON.parse(res.data.list[x].wff_json)
+              }
+
              }, (error) => { })
         }
       }
@@ -311,7 +321,18 @@ export default {
           wff_json:JSON.stringify(this.formJson.wff_json)
         } 
       }).then((res) => {
-          console.log(res)
+        if(res.data.errorCode == 1){
+          this.dialogCreateFormVisible = false
+          this.$notify({
+            title: '提示',
+            message: this.formJson.wff_name + '保存成功',
+            duration: 0,
+            type: 'success'
+          });
+        }else{
+
+        }
+
         }, (error) => {
       })
     },
