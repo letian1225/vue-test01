@@ -19,8 +19,8 @@
           <el-form-item label="所属公司ID">
             <el-input v-model="formJson.wff_company"></el-input>
           </el-form-item>
-          <el-form-item label="归属模块ID">
-            <el-input v-model="formJson.wff_module"></el-input>
+          <el-form-item label="归属模块">
+            <moduleList @setModule="setModule" :getModuel="formJson.wff_module"></moduleList>
           </el-form-item>
           <el-form-item label="归属工作流ID">
             <el-input v-model="formJson.wff_workflow"></el-input>
@@ -179,32 +179,39 @@
 
         <el-dialog title="选择数据源" :visible.sync="dialogDataSourceVisible">
             <el-table
-              ref="multipleTable"
-              :data="dataSourceData"
-              tooltip-effect="dark"
-              style="width: 100%">
-              <el-table-column
-                prop="id"
-                label="ID">
+                :data="dataSourceData"
+                style="width: 100%" max-height="550">
+                <el-table-column
+                  prop="wc_id"
+                  label="ID">
+                </el-table-column>
+                <el-table-column
+                  prop="wc_name"
+                  label="数据源英文名称">
+                </el-table-column>
+                <el-table-column
+                  prop="wc_name_ch"
+                  label="数据源名称">
+                </el-table-column>
+                <el-table-column
+                  prop="wc_abled"
+                  label="是否启用">
+                  <template slot-scope="scope">
+                    {{scope.row.wc_abled === '0' ? '否' : '是'}}
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作">
+                  <template slot-scope="scope">
+                    <el-button
+                      type="text"
+                      size="small"
+                      @click="dialogDataSourceVisible = false, selectDataSourceData(scope.row.wc_id)">
+                      选择
+                    </el-button>
+                  </template>
+                </el-table-column>
                 
-              </el-table-column>
-              <el-table-column
-                prop="name"
-                label="数据源名称">
-              </el-table-column>
-              <el-table-column
-                prop="address"
-                label="操作"
-                width="120">
-                <template slot-scope="scope">
-                  <el-button size="small" type="primary">选择</el-button>
-                </template>
-              </el-table-column>
             </el-table>
-            <div slot="footer" class="dialog-footer">
-              <el-button @click="dialogDataSourceVisible = false">取 消</el-button>
-              <el-button type="primary" @click="dialogDataSourceVisible = false">确 定</el-button>
-            </div>
         </el-dialog>
 
 
@@ -222,6 +229,7 @@
 <script>
 import Vue from 'vue'
 import Vddl from 'vddl'
+import moduleList from '../../components/moduleList'
 
 Vue.use(Vddl)
 
@@ -236,12 +244,7 @@ export default {
         dialogCreateVisible:false,
         dialogConsoleVisible:false,
         dialogDataSourceVisible:false,
-        dataSourceData:[
-          {
-            id: '1',
-            name: 'xxxx'
-          }
-        ],
+        dataSourceData:[],
         dialogCreateFormVisible:false,
         formJson:{
           wff_name:"新建表单_" + this.createUID(),
@@ -258,8 +261,25 @@ export default {
   created(){
     this.listWfFormWidgets()
     this.listWfForms()
+    this.getCodeList()
   },
   methods: {
+    setModule(msg){
+      console.log(msg)
+      this.formJson.wff_module = msg
+    },
+    //数据源列表
+    getCodeList(){
+      Vue.http.jsonp("http://milibangong.cn/Appservice/FormWidgets/getCodeList")
+         .then((res) => {
+            //console.log(res.data.list)
+            this.dataSourceData = res.data.list
+         }, (error) => { })
+    },
+    selectDataSourceData(id){
+      console.log(id)
+      this.attribute.wfw_attr[0].dataSource = id
+    },
     onCreateFormSubmit(){
       let wff_id = this.$route.query.wff_id
       if(wff_id !== undefined){
@@ -283,21 +303,28 @@ export default {
           //新建
         }else{
           //编辑
+          this.getWfFormByID(wff_id)
           Vue.http.jsonp("http://milibangong.cn/Appservice/Forms/listWfForms",{params: { wff_id: wff_id}})
              .then((res) => {
-              for(let x in res.data.list){
-                this.formJson.wff_name = res.data.list[x].wff_name
-                this.formJson.wff_company = res.data.list[x].wff_company
-                this.formJson.wff_module = res.data.list[x].wff_module
-                this.formJson.wff_workflow = res.data.list[x].wff_workflow
-                this.formJson.wff_node = res.data.list[x].wff_node
-                this.formJson.wff_json = JSON.parse(res.data.list[x].wff_json)
-              }
-
+                console.log(res.data.list)
              }, (error) => { })
         }
+
       }
-      
+    },
+    //根据表单结构ID取得指定的表单结构                 
+    getWfFormByID(wff_id){
+      Vue.http.jsonp("http://milibangong.cn/Appservice/Forms/getWfFormByID",{params: { wff_id: wff_id}})
+         .then((res) => {
+            this.formJson.wff_name = res.data.list[0].wff_name
+            this.formJson.wff_company = res.data.list[0].wff_company
+            this.formJson.wff_module = res.data.list[0].wff_module
+            this.formJson.wff_workflow = res.data.list[0].wff_workflow
+            this.formJson.wff_node = res.data.list[0].wff_node
+            this.formJson.wff_json = JSON.parse(res.data.list[0].wff_json)
+            console.log(res.data.list[0].wff_json)
+
+         }, (error) => { })
     },
     //控件列表
     listWfFormWidgets(){
@@ -310,7 +337,7 @@ export default {
     },
     //编辑、新建表单
     editWfForms(wff_id){
-      Vue.http.jsonp("http://milibangong.cn/Appservice/Forms/editWfForms",{params: {
+      Vue.http.post("http://milibangong.cn/Appservice/Forms/editWfForms",{
           wff_id: wff_id,
           wff_name:this.formJson.wff_name,
           wff_company:this.formJson.wff_company,
@@ -319,8 +346,8 @@ export default {
           wff_workflow:this.formJson.wff_workflow,
           wff_abled:this.formJson.wff_abled,
           wff_json:JSON.stringify(this.formJson.wff_json)
-        } 
-      }).then((res) => {
+        },{emulateJSON: true}).then((res) => {
+        console.log(res)
         if(res.data.errorCode == 1){
           this.dialogCreateFormVisible = false
           this.$notify({
@@ -353,7 +380,7 @@ export default {
       
     }
   },
-  components:{}
+  components:{moduleList}
 }
 </script>
 

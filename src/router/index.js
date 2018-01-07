@@ -2,12 +2,17 @@ import Vue from 'vue'
 import Router from 'vue-router'
 //components
 import Login from '@/components/login'
-//views
+//桌面
 import Home from '@/views/home/home'
+
+//模块管理
+import ModuleList from '@/views/module/list'
+
+//表单管理
 import Form from '@/views/forms/form'
 import Control from '@/views/forms/control'
 import DataSource from '@/views/forms/dataSource'
-import List from '@/views/forms/list'
+import FormList from '@/views/forms/list'
 
 Vue.use(Router)
 
@@ -22,6 +27,11 @@ export default new Router({
       path: '/home',
       name: 'Home',
       component: Home
+    },
+    {
+      path: '/module/list',
+      name: 'ModuleList',
+      component: ModuleList
     },
     {
       path: '/form',
@@ -40,8 +50,8 @@ export default new Router({
     },
     {
       path: '/forms/list',
-      name: 'List',
-      component: List
+      name: 'FormList',
+      component: FormList
     },
   ]
 })

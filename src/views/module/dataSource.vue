@@ -16,7 +16,7 @@
 					</div>
 					<div class="page-body">
 						<el-form :inline="true" class="form-inline">
-						  	<el-button type="primary" size="small"  @click="dialogCreate = true">新建数据源</el-button>
+						  	<el-button type="primary" size="small"  @click="onCreateForm('0')">新建数据源</el-button>
 						</el-form>
 						
 						<el-table
@@ -37,30 +37,21 @@
 						    <el-table-column
 						      prop="wc_abled"
 						      label="是否启用">
-						      <template slot-scope="scope">
-						      	{{scope.row.wc_abled === '0' ? '否' : '是'}}
-						      </template>
 						    </el-table-column>
 						   
 						    <el-table-column label="操作">
 						      <template slot-scope="scope">
 						        <el-button
-						          @click="dialogEdit = true, getCodeListById(scope.row.wc_id)"
+						          @click="onEdit(scope.row.wc_id)"
 						          type="text"
 						          size="small">
-						          编辑
+						          编辑数据源
 						        </el-button>
 						        <el-button
-						          @click="dialogDetail = true, onDetail(scope.row.wc_id)"
+						          @click="diaglogDetail = true, onDetail(scope.row.wc_id)"
 						          type="text"
 						          size="small">
-						          明细
-						        </el-button>
-						        <el-button
-						          @click="deleteCodeById(scope.row.wc_id)"
-						          type="text"
-						          size="small">
-						          删除
+						          数据源明细
 						        </el-button>
 						      </template>
 						    </el-table-column>
@@ -69,52 +60,10 @@
 
 
 					</div>
-			  		<el-dialog
-		  		      width="40%"
-		  		      title="新增数据源"
-		  		      :visible.sync="dialogCreate"
-		  		      append-to-body>
-		  		      	<pre>{{row}}</pre>
-						<el-form ref="form" :model="row" label-width="120px">
-						  <el-form-item label="数据源英文名称">
-						    <el-input v-model="row.wc_name"></el-input>
-						  </el-form-item>
-						  <el-form-item label="数据源中文名称">
-						    <el-input v-model="row.wc_name_ch"></el-input>
-						  </el-form-item>
-						  <el-form-item label="是否启用">
-						    <el-switch v-model="row.wc_abled" active-value="1" inactive-value="0"></el-switch>
-						  </el-form-item>
-						  <el-form-item>
-						      <el-button type="primary" @click="onSaveEdit(0)">立即保存</el-button>
-						      <el-button @click="dialogCreate = false">取消</el-button>
-						    </el-form-item>
-						</el-form>
-		  		    </el-dialog>
-	    	  		<el-dialog
-	      		      width="40%"
-	      		      title="编辑数据源"
-	      		      :visible.sync="dialogEdit"
-	      		      append-to-body>
-	    				<el-form ref="form" :model="row" label-width="120px">
-	    				  <el-form-item label="数据源英文名称">
-	    				    <el-input v-model="row.wc_name"></el-input>
-	    				  </el-form-item>
-	    				  <el-form-item label="数据源中文名称">
-	    				    <el-input v-model="row.wc_name_ch"></el-input>
-	    				  </el-form-item>
-	    				  <el-form-item label="是否启用">
-	    				    <el-switch v-model="row.wc_abled" active-value="1" inactive-value="0"></el-switch>
-	    				  </el-form-item>
-	    				  <el-form-item>
-	    				      <el-button type="primary" @click="onSaveEdit(row.wc_id)">立即保存</el-button>
-	    				      <el-button @click="dialogEdit = false">取消</el-button>
-	    				    </el-form-item>
-	    				</el-form>
-	      		    </el-dialog>
-					<el-dialog title="数据源明细" :visible.sync="dialogDetail" width="80%">
+
+					<el-dialog title="数据源明细" :visible.sync="diaglogDetail" width="80%">
 						<el-form :inline="true" class="form-inline">
-						  	<el-button type="primary" size="small"  @click="dialogCreateDetail = true">新建数据源明细</el-button>
+						  	<el-button type="primary" size="small"  @click="diaglogCreateDetail = true">新建数据源明细</el-button>
 						</el-form>
 				  		<el-table
 				  		    :data="tableDetail"
@@ -142,29 +91,20 @@
 				  		   	<el-table-column
 				  		      prop="wcd_is_default"
 				  		      label="是否是默认值">
-				  		      <template slot-scope="scope">
-			  		              <el-tag
-			  		                :type="scope.row.wcd_is_default === '0' ? 'primary' : 'success'"
-			  		                close-transition>{{scope.row.wcd_is_default === '0' ? '否' : '是'}}</el-tag>
-			  		          </template>
 				  		    </el-table-column>
 				  		    <el-table-column
 				  		      prop="wcd_abled"
 				  		      label="是否可用">
-				  		      <template slot-scope="scope">
-				  		      	{{scope.row.wcd_abled === '0' ? '否' : '是'}}
-				  		      </template>
 				  		    </el-table-column>
 				  		    <el-table-column label="操作">
 				  		      <template slot-scope="scope">
 				  		        <el-button
-				  		          @click="dialogEditDetail = true, onDetailById(scope.row.wcd_id)"
+				  		          @click="diaglogEditDetail = true, onDetailById(scope.row.wcd_id)"
 				  		          type="text"
 				  		          size="small">
-				  		          编辑
+				  		          编辑数据源明细
 				  		        </el-button>
 				  		        <el-button
-				  		          @click="onDetailDelete(scope.row.wcd_id, scope.row.wcd_wc_id)"
 				  		          type="text"
 				  		          size="small">
 				  		          删除
@@ -176,7 +116,7 @@
 	  			  		<el-dialog
 	  		  		      width="60%"
 	  		  		      title="新增数据源明细"
-	  		  		      :visible.sync="dialogCreateDetail"
+	  		  		      :visible.sync="diaglogCreateDetail"
 	  		  		      append-to-body>
 	  		  		      	<pre>{{rowDetail}}</pre>
 	  						<el-form ref="form" :model="rowDetail" label-width="120px">
@@ -190,21 +130,21 @@
 	  						    <el-input v-model="rowDetail.wcd_order"></el-input>
 	  						  </el-form-item>
 	  						  <el-form-item label="是否是默认值">
-	  						      <el-switch v-model="rowDetail.wcd_is_default" active-value="1" inactive-value="0"></el-switch>
+	  						    <el-input v-model="rowDetail.wcd_is_default"></el-input>
 	  						  </el-form-item>
 	  						  <el-form-item label="是否启用">
 	  						      <el-switch v-model="rowDetail.wcd_abled" active-value="1" inactive-value="0"></el-switch>
 	  						  </el-form-item>
 	  						  <el-form-item>
 	  						      <el-button type="primary" @click="onSaveEditDetail(0,rowDetail.wcd_wc_id)">立即保存</el-button>
-	  						      <el-button @click="dialogCreateDetail = false">取消</el-button>
+	  						      <el-button @click="diaglogCreateDetail = false">取消</el-button>
 	  						    </el-form-item>
 	  						</el-form>
 	  		  		    </el-dialog>
 				  		<el-dialog
 			  		      width="60%"
 			  		      title="编辑数据源明细"
-			  		      :visible.sync="dialogEditDetail"
+			  		      :visible.sync="diaglogEditDetail"
 			  		      append-to-body>
 			  		      	<pre>{{rowDetail}}</pre>
 							<el-form ref="form" :model="rowDetail" label-width="120px">
@@ -218,14 +158,14 @@
 							    <el-input v-model="rowDetail.wcd_order"></el-input>
 							  </el-form-item>
 							  <el-form-item label="是否是默认值">
-							    <el-switch v-model="rowDetail.wcd_is_default" active-value="1" inactive-value="0"></el-switch>
+							    <el-input v-model="rowDetail.wcd_is_default"></el-input>
 							  </el-form-item>
 							  <el-form-item label="是否启用">
-							    <el-switch v-model="rowDetail.wcd_abled" active-value="1" inactive-value="0"></el-switch>
+							      <el-switch v-model="rowDetail.wcd_abled" active-value="1" inactive-value="0"></el-switch>
 							  </el-form-item>
 							  <el-form-item>
 							      <el-button type="primary" @click="onSaveEditDetail(rowDetail.wcd_id,rowDetail.wcd_wc_id)">立即保存</el-button>
-							      <el-button @click="dialogEditDetail = false">取消</el-button>
+							      <el-button @click="diaglogEditDetail = false">取消</el-button>
 							    </el-form-item>
 							</el-form>
 			  		    </el-dialog>
@@ -254,21 +194,15 @@ import Vue from 'vue'
 import navbar from '../../components/navbar'
 import sidemenu from '../../components/sidemenu'
 
+
 export default {
-  name:"dataSource",
+  name:"list",
   data() {
     return {
         tableData: [],
         tableDetail:[],
         tableEditDetail:[],
-        row:{
-        	"wc_id":"",
-			"wc_name":"",
-			"wc_name_ch": "",
-			"wc_abled": "1",
-        },
         rowDetail:{
-        	"wcd_id":"",
         	"wcd_wc_id":"",
 			"wcd_value": "",
 			"wcd_text": "",
@@ -276,11 +210,10 @@ export default {
 			"wcd_is_default": "0",
 			"wcd_abled": "1"
 		},
-        dialogCreate:false,
-        dialogEdit:false,
-        dialogDetail:false,
-        dialogEditDetail:false,
-        dialogCreateDetail:false,
+        rowJson:[],
+        diaglogDetail:false,
+        diaglogEditDetail:false,
+        diaglogCreateDetail:false,
     }
   },
   created(){
@@ -290,7 +223,6 @@ export default {
 
   },
   methods: {
-
   	//数据源列表
   	getCodeList(){
   		Vue.http.jsonp("http://milibangong.cn/Appservice/FormWidgets/getCodeList")
@@ -298,66 +230,8 @@ export default {
   		   		this.tableData = res.data.list
   		   }, (error) => { })
   	},
-  	//根据数据源ID查询
-  	getCodeListById(wc_id){
-  		Vue.http.jsonp("http://milibangong.cn/Appservice/FormWidgets/getCodeList",{params: { wc_id:wc_id}})
-  		   .then((res) => {
-  		   		this.row = res.data.list[0]
-  		   }, (error) => { })
-  	},
-  	//编辑数据源保存
-  	onSaveEdit(wc_id){
-  		Vue.http.jsonp("http://milibangong.cn/Appservice/FormWidgets/editCode",{
-	  			params: { 
-	  				wc_id:wc_id,
-	  				wc_name:this.row.wc_name,
-	  				wc_name_ch:this.row.wc_name_ch,
-	  				wc_abled:this.row.wc_abled,
-	  			}
-  			})
-  		   .then((res) => {
-  		   		if(res.data.errorCode == 1){
-  		   			if(wc_id == 0){
-  		   				this.dialogCreate = false
-  		   			}else{
-  		   				this.dialogEdit = false
-  		   			}
-  		   			this.getCodeList()
-          			this.$notify({
-          			  title: '提示',
-          			  message: this.row.wc_name_ch + '保存成功',
-          			  duration: 0,
-          			  type: 'success'
-          			});
-          		}
+  	onEdit(wc_id){
 
-  		   }, (error) => { })
-  	},
-  	//删除数据源和明细
-  	deleteCodeById(wc_id){
-  		this.$confirm('此操作删除该条数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-	  		Vue.http.jsonp("http://milibangong.cn/Appservice/FormWidgets/deleteCodeById",{params: { wc_id: wc_id}})
-	  		   .then((res) => {
-					if(res.data.errorCode == 1){
-						this.$message({
-						  type: 'success',
-						  message: '删除成功!'
-						});
-					}else{
-						this.$message({
-						  type: 'warning',
-						  message: '删除失败!'
-						});
-					}
-	  		   		this.getCodeList()
-	  		   }, (error) => { })
-          
-
-        }).catch(() => {});
   	},
   	//数据源明细
   	onDetail(wc_id){
@@ -373,42 +247,24 @@ export default {
   		Vue.http.jsonp("http://milibangong.cn/Appservice/FormWidgets/getCodeDetailByDetailId",{params: { wcd_id: wcd_id}})
   		   .then((res) => {
   		   		this.rowDetail = res.data.list[0]
+  		   		console.log(this.rowDetail)
   		   }, (error) => { })
 
 
   	},
-  	//删除数据源明细
-  	onDetailDelete(wcd_id,wcd_wc_id){
-  		this.$confirm('此操作删除该条数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-	  		Vue.http.jsonp("http://milibangong.cn/Appservice/FormWidgets/deleteCodeDetailByDetailId",{params: { wcd_id: wcd_id}})
-	  		   .then((res) => {
-					if(res.data.errorCode == 1){
-						this.$message({
-						  type: 'success',
-						  message: '删除成功!'
-						});
-					}else{
-						this.$message({
-						  type: 'warning',
-						  message: '删除失败!'
-						});
-					}
-	  		   		this.onDetail(wcd_wc_id)
-	  		   }, (error) => { })
-          
 
-        }).catch(() => {});
-  		
+  	onEditDetail(wc_id){
+  		Vue.http.jsonp("http://milibangong.cn/Appservice/FormWidgets/getCodeDetailById",{params: { wc_id: wc_id}})
+  		   .then((res) => {
+  		   		this.tableDetail = res.data.list
+
+  		   }, (error) => { })
   	},
   	//编辑数据源明细保存
-  	onSaveEditDetail(wcd_id,wcd_wc_id){
+  	onSaveEditDetail(wc_id,wcd_wc_id){
   		Vue.http.jsonp("http://milibangong.cn/Appservice/FormWidgets/editCodeDetail",{
 	  			params: { 
-	  				wcd_id:wcd_id,
+	  				wc_id: wc_id,
 	  				wcd_wc_id:wcd_wc_id,
 	  				wcd_value:this.rowDetail.wcd_value,
 	  				wcd_text:this.rowDetail.wcd_text,
@@ -421,10 +277,10 @@ export default {
   		   		console.log(res)
   		   		//this.tableDetail = res.data.list
   		   		if(res.data.errorCode == 1){
-  		   			if(wcd_id == 0){
-  		   				this.dialogCreateDetail = false
+  		   			if(wc_id == 0){
+  		   				this.diaglogCreateDetail = false
   		   			}else{
-  		   				this.dialogEditDetail = false
+  		   				this.diaglogEditDetail = false
   		   			}
   		   			this.onDetail(wcd_wc_id)
           			this.$notify({
