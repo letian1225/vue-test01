@@ -6,7 +6,7 @@
         :label="item.wm_name"
         :value="item.wm_id"
         :disabled="(item.wm_abled == 0)? true : false">
-          <span style="float: left"><img width="20" height="20" :src="item.wm_icon" style="vertical-align: middle;"></span>
+          <span style="float: left"><img width="20" height="20" :src="'../../static/images/module/'+item.wm_icon+'@3x.png'" style="vertical-align: middle;"></span>
           <span style="float: right;">{{ item.wm_name }}</span>
       </el-option>
     </el-select>

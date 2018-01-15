@@ -45,12 +45,15 @@
 						      prop="wm_icon"
 						      label="模块图标">
 						      <template slot-scope="scope">
-						      	<img :src="scope.row.wm_icon" width="50" height="50" onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAADqklEQVR4Xu2bS17bMBCHZ0xIk2xKFs1DWRROUHqCJiegnKDlBKUnKD1B6QkKJyg3ID0BcIKysRLDIrABysPTn8gDx7GRrFgJdqxtZGXm818azUhGWPCGC+4/ZAAyBSw4gbEp0Ov1Vm5u7t+lmUmhkDspl8sXQx9HAM7Oztbv7ugQEVbSDIAILpaXsVWpVI6FnyMAnDt7APApzc57fNtnrPrZB6DbBsAPiwGA/jBWa2YAxqfAuAKI4MSyrO00KMJ13V1E8CzuSgp46pR0CJz7p3cGQGUNyBQwopRNgYQTyNaAbBGcQRQQucTDA20QUZMITy3L2q/X37RfwuwxPgU4724D4A+/s0Sw12hUt+YNwSiATue8SeQehjlJBN8bjerOPCEYBTA5+IQOThmrraUWgG07PVkNoVjMl71FiFnDMKwAh2QOMVada/HVNIADANh4Zg04aTSq6zJIz/3e6fRW6/Xyqe4YRgGI8Hd/TyLcvQ4xcJOxqoCk1Wzb2UGE1WEFR2cQowCEQX0I7gEAvvUYeImI2/V6RZTatJo3wiDm13RVYBzA0DthsOu6Tcuy2oVC7niahU9UqK+v/x0B4Gp/fGozVmvpkJwZAB3jwp7h3PkNAB+9vyNaLZ3dZeIAcO4IxwUAX9NTQaIAiBXfdW+PwvYWOipIFADOu4cA+FiyDm4UeWeZGACDkPdNtpYg4laU6JIIAIP9xJHM+UFEiKSCmQIQEi4WX21GCYGTIU8FA31lrLar0nNmADjv7gLgFwA4YKy6qWKc6GPbzi9EeDyrU23ikLNUyq+pgJ4JgMm6gNobCg95chSqtQbjAMIknMvh++ExdJA74rmrq9u/snQ6NB4oqsA4gDAJE8FxqZRvhclUHvLkKgCgn4zVnj3DNApALuFgA8PqiCou+/vIEiVjACJIeCwljhbylJCMLjwE9TYGQFXC3hV7AE1cxZmqSBJFBUYARJdwP5HxhEqlV6veKTxRih3AFBeqRGVoLMVVd1DeMyxRih2AbTsiW4tVwnL3VHoEqyBWAKoJi4q5JvoEqSA2ALJTIBMORR9zMl2OBYBewhLd/Die8KfLsQDQSVjicEZvjHEVTA1AvtvTM9PsU0/J2NQA+mf/mKg7xEtLdDFMxKYGYPZNmR89A6BzR0iksim7KuvZuCndFDUvzfn9QwYg6Krsgn8woXDOPz/FxvvPl4j59eFRe9BHUy8wy4uPgP/Yfq53d+JzS3+kDIA+u3Q8mSkgHe9R34v/L9SjbkcAggwAAAAASUVORK5CYII='">
+						      	<img :src="'../../static/images/module/'+scope.row.wm_icon+'@3x.png'" width="50" height="50" onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAADqklEQVR4Xu2bS17bMBCHZ0xIk2xKFs1DWRROUHqCJiegnKDlBKUnKD1B6QkKJyg3ID0BcIKysRLDIrABysPTn8gDx7GRrFgJdqxtZGXm818azUhGWPCGC+4/ZAAyBSw4gbEp0Ov1Vm5u7t+lmUmhkDspl8sXQx9HAM7Oztbv7ugQEVbSDIAILpaXsVWpVI6FnyMAnDt7APApzc57fNtnrPrZB6DbBsAPiwGA/jBWa2YAxqfAuAKI4MSyrO00KMJ13V1E8CzuSgp46pR0CJz7p3cGQGUNyBQwopRNgYQTyNaAbBGcQRQQucTDA20QUZMITy3L2q/X37RfwuwxPgU4724D4A+/s0Sw12hUt+YNwSiATue8SeQehjlJBN8bjerOPCEYBTA5+IQOThmrraUWgG07PVkNoVjMl71FiFnDMKwAh2QOMVada/HVNIADANh4Zg04aTSq6zJIz/3e6fRW6/Xyqe4YRgGI8Hd/TyLcvQ4xcJOxqoCk1Wzb2UGE1WEFR2cQowCEQX0I7gEAvvUYeImI2/V6RZTatJo3wiDm13RVYBzA0DthsOu6Tcuy2oVC7niahU9UqK+v/x0B4Gp/fGozVmvpkJwZAB3jwp7h3PkNAB+9vyNaLZ3dZeIAcO4IxwUAX9NTQaIAiBXfdW+PwvYWOipIFADOu4cA+FiyDm4UeWeZGACDkPdNtpYg4laU6JIIAIP9xJHM+UFEiKSCmQIQEi4WX21GCYGTIU8FA31lrLar0nNmADjv7gLgFwA4YKy6qWKc6GPbzi9EeDyrU23ikLNUyq+pgJ4JgMm6gNobCg95chSqtQbjAMIknMvh++ExdJA74rmrq9u/snQ6NB4oqsA4gDAJE8FxqZRvhclUHvLkKgCgn4zVnj3DNApALuFgA8PqiCou+/vIEiVjACJIeCwljhbylJCMLjwE9TYGQFXC3hV7AE1cxZmqSBJFBUYARJdwP5HxhEqlV6veKTxRih3AFBeqRGVoLMVVd1DeMyxRih2AbTsiW4tVwnL3VHoEqyBWAKoJi4q5JvoEqSA2ALJTIBMORR9zMl2OBYBewhLd/Die8KfLsQDQSVjicEZvjHEVTA1AvtvTM9PsU0/J2NQA+mf/mKg7xEtLdDFMxKYGYPZNmR89A6BzR0iksim7KuvZuCndFDUvzfn9QwYg6Krsgn8woXDOPz/FxvvPl4j59eFRe9BHUy8wy4uPgP/Yfq53d+JzS3+kDIA+u3Q8mSkgHe9R34v/L9SjbkcAggwAAAAASUVORK5CYII='">
 						      </template>
 						    </el-table-column>
 						    <el-table-column
 						      prop="wm_abled"
 						      label="状态">
+						      <template slot-scope="scope">
+						      	{{scope.row.wm_abled == 1 ? "启用" : "禁用"}}
+						      </template>
 						    </el-table-column>
 						    <el-table-column
 						      prop="wm_tpl"
@@ -92,8 +95,15 @@
 						    <el-input v-model="row.wm_partments"></el-input>
 						  </el-form-item>
 						  <el-form-item label="模块图标">
-						    <el-input v-model="row.wm_icon" readonly></el-input>
-						    <upload @url="setUrl" :value="row.wm_icon"></upload>
+						    <el-select v-model="row.wm_icon" placeholder="请选择">
+						        <el-option
+						          v-for="item in moduleIcon"
+						          :key="item.value"
+						          :value="item.value">
+						          <span style="float:left;"><img :src="item.src" width="32" height="32"></span>
+						          <span style="float:right;">{{item.value}}</span>
+						        </el-option>
+						    </el-select>
 						  </el-form-item>
 						  <el-form-item label="是否启用">
 						    <el-switch v-model="row.wm_abled" active-value="1" inactive-value="0"></el-switch>
@@ -127,8 +137,15 @@
 	    				    <el-input v-model="row.wm_partments"></el-input>
 	    				  </el-form-item>
 	    				  <el-form-item label="模块图标">
-	    				    <el-input v-model="row.wm_icon" readonly></el-input>
-	    				    <upload @url="setUrl" :value="row.wm_icon"></upload>
+	    				    <el-select v-model="row.wm_icon" placeholder="请选择">
+	    				        <el-option
+	    				          v-for="item in moduleIcon"
+	    				          :key="item.value"
+	    				          :value="item.value">
+	    				          <span style="float:left;"><img :src="item.src" width="32" height="32"></span>
+	    				          <span style="float:right;">{{item.value}}</span>
+	    				        </el-option>
+	    				    </el-select>
 	    				  </el-form-item>
 	    				  <el-form-item label="是否启用">
 	    				    <el-switch v-model="row.wm_abled" active-value="1" inactive-value="0"></el-switch>
@@ -161,7 +178,7 @@ import Vue from 'vue'
 import navbar from '../../components/navbar'
 import sidemenu from '../../components/sidemenu'
 import upload from '../../components/upload'
-
+import moduleIconData from '../../api/module_icon_data'
 
 
 
@@ -181,6 +198,7 @@ export default {
 			"wm_tpl": "",
 
         },
+        moduleIcon:[],
         dialogCreate:false,
         dialogEdit:false
         		
@@ -188,6 +206,10 @@ export default {
   },
   created(){
   	this.listWfModule()
+  	Vue.http.get("module_icon")
+  	   .then((res) => {
+  	   		this.moduleIcon = res.data.module_icon
+  	   }, (error) => { })
   },
   computed:{
 

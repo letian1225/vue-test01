@@ -49,6 +49,9 @@
 						    <el-table-column
 						      prop="wff_abled"
 						      label="状态">
+						      <template slot-scope="scope">
+						      	{{scope.row.wff_abled == 1 ? "启用" : "禁用"}}
+						      </template>
 						    </el-table-column>
 						    <el-table-column
 						      prop="wff_create_time"
@@ -67,11 +70,10 @@
 						          编辑
 						        </el-button>
 						        <el-button
-						          @click="showRowJson(scope.row.wff_json), dialogShowJsonVisible = true"
-
+						          @click="onGetFormData(scope.row.wff_id)"
 						          type="text"
-						          icon="fa fa-code"
 						          size="small">
+						          数据
 						        </el-button>
 						      </template>
 						    </el-table-column>
@@ -81,8 +83,24 @@
 
 					</div>
 
+
 					<el-dialog title="表单JSON结构" :visible.sync="dialogShowJsonVisible">
 				  		<pre>{{rowJson}}</pre>
+					</el-dialog>
+
+					<el-dialog title="数据列表" :visible.sync="dialogDataListVisible">
+				  		<table class="layout-table">
+				  			<thead>
+				  				<tr>
+				  					<th v-for="(value, i) in dataList[0]">{{value.labelName}}[{{value.name}}]</th>
+				  				</tr>
+				  			</thead>
+				  			<tbody>
+				  				<tr v-for="(item, i) in dataList">
+				  					<td v-for="(value, i) in item">{{value.value}}</td>
+				  				</tr>
+				  			</tbody>
+				  		</table>
 					</el-dialog>
 
 
@@ -114,6 +132,8 @@ export default {
         tableData: [],
         rowJson:[],
         dialogShowJsonVisible:false,
+        dialogDataListVisible:false,
+        dataList: [],
     }
   },
   created(){
@@ -123,10 +143,16 @@ export default {
 
   },
   methods: {
+  	onGetFormData(wff_id){
+  		this.dialogDataListVisible = true
+  		Vue.http.jsonp("http://milibangong.cn/Appservice/Statistics/getFormDataListByFormId",{params: { wff_id: wff_id}})
+  		   .then((res) => {
+  		   		this.dataList = res.data.list
+  		   }, (error) => { })
+  	},
   	listWfFormWidgets(){
 		Vue.http.jsonp("http://milibangong.cn/Appservice/Forms/listWfForms")
 		   .then((res) => {
-		   		console.log( res.data.list)
 		   		this.tableData = res.data.list
 
 		   }, (error) => { })
