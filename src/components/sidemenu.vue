@@ -28,15 +28,17 @@
         </el-menu-item-group>
       </el-submenu>
 
-      <el-submenu index="3">
+      <el-submenu index="4">
         <template slot="title">
           <i class="fa fa-line-chart"></i>
           <span slot="title">统计</span>
         </template>
-       
+        <el-menu-item-group>
+          <el-menu-item index="/statistics/list">统计管理</el-menu-item>
+        </el-menu-item-group>
       </el-submenu>
 
-      <el-submenu index="3">
+      <el-submenu index="5">
         <template slot="title">
           <i class="fa fa-key"></i>
           <span slot="title">权限</span>

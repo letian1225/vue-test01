@@ -27,6 +27,7 @@ export default {
   data () {
     return {
     	activeIndex: '1',
+      company:0
     }
   },
   methods:{

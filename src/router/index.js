@@ -5,14 +5,19 @@ import Login from '@/components/login'
 //桌面
 import Home from '@/views/home/home'
 
-//模块管理
+//模块
 import ModuleList from '@/views/module/list'
 
-//表单管理
+//表单
 import Form from '@/views/forms/form'
 import Control from '@/views/forms/control'
 import DataSource from '@/views/forms/dataSource'
 import FormList from '@/views/forms/list'
+
+//统计
+import Statistics from '@/views/statistics/list'
+import StatisticsEdit from '@/views/statistics/edit'
+
 
 Vue.use(Router)
 
@@ -52,6 +57,16 @@ export default new Router({
       path: '/forms/list',
       name: 'FormList',
       component: FormList
+    },
+    {
+      path: '/statistics/list',
+      name: 'Statistics',
+      component: Statistics
+    },
+    {
+      path: '/statistics/edit',
+      name: 'StatisticsEdit',
+      component: StatisticsEdit
     },
   ]
 })

@@ -151,20 +151,26 @@
                 <input type="number" v-model="attribute.wfw_attr[0].maxSize" placeholder="">
               </div>
             </div>
-            <div class="attr-item">
+            <div class="attr-item" v-if="attribute.wfw_attr[0].placeholder != null">
+              <label>默认显示文字</label>
+              <div class="edit-text">
+                <input type="text" v-model="attribute.wfw_attr[0].placeholder" placeholder="">
+              </div>
+            </div>
+            <div class="attr-item" v-if="attribute.wfw_attr[0].dataType != null">
               <label>值数据类型</label>
               <div class="edit-text">
                 <input type="text" v-model="attribute.wfw_attr[0].dataType" placeholder="">
               </div>
             </div>
-            <div class="attr-item">
+            <div class="attr-item" v-if="attribute.wfw_attr[0].dataSource != null">
               <label>数据源</label>
               <div class="edit-text">
                 <input type="text" v-model="attribute.wfw_attr[0].dataSource" placeholder="" readonly>
                 <a href="javascript:;" @click="dialogDataSourceVisible = true">添加数据源</a>
               </div>
             </div>
-            <div class="attr-item">
+            <div class="attr-item" v-if="attribute.wfw_attr[0].isMustInput != null">
               <label>是否必填</label>
               <div class="edit-text">
                 <div class="radio">
@@ -177,7 +183,7 @@
                 </div>
               </div>
             </div>
-            <div class="attr-item">
+            <div class="attr-item" v-if="attribute.wfw_attr[0].readOnly != null">
               <label>是否可编辑</label>
               <div class="edit-text">
                 <div class="radio">
@@ -209,8 +215,8 @@
               <label>类型</label>
               <div class="edit-text">
                 <div v-for="item in attribute.wfw_attr[0].type"  class="radio">
-                <input type="radio" v-model="attribute.wfw_attr[0].type_selected" name="type" :value="item.wfwq_id" :id="item.wfwq_name">
-                <span>{{item.wfwq_name_ch}}</span>
+                <input type="radio" v-model="attribute.wfw_attr[0].type_selected" name="type" :value="item.type_id" :id="item.type_name">
+                <span>{{item.type_name_ch}}</span>
                 </div>
               </div>
             </div>
@@ -310,7 +316,7 @@ export default {
         dataSourceData:[],
         dialogCreateFormVisible:false,
         formJson:{
-          wff_name:"新建表单_" + this.createUID(),
+          wff_name:"form_" + this.createUID(),
           wff_company:"3",
           wff_module:"3",
           wff_workflow:"3",
@@ -331,19 +337,16 @@ export default {
       this.formJson.wff_json = []
     },
     setModule(msg){
-      console.log(msg)
       this.formJson.wff_module = msg
     },
     //数据源列表
     getCodeList(){
       Vue.http.jsonp("http://milibangong.cn/Appservice/FormWidgets/getCodeList")
          .then((res) => {
-            //console.log(res.data.list)
             this.dataSourceData = res.data.list
          }, (error) => { })
     },
     selectDataSourceData(id){
-      console.log(id)
       this.attribute.wfw_attr[0].dataSource = id
     },
     onCreateFormSubmit(){
@@ -362,7 +365,6 @@ export default {
     //根据表单ID取得指定的表单数据
     listWfForms(){
       let wff_id = this.$route.query.wff_id
-
       if(wff_id !== undefined){
 
         if(wff_id == 0){
@@ -372,7 +374,7 @@ export default {
           this.getWfFormByID(wff_id)
           Vue.http.jsonp("http://milibangong.cn/Appservice/Forms/listWfForms",{params: { wff_id: wff_id}})
              .then((res) => {
-                console.log(res.data.list)
+                //console.log(res.data.list)
              }, (error) => { })
         }
 
@@ -387,9 +389,9 @@ export default {
             this.formJson.wff_module = res.data.list[0].wff_module
             this.formJson.wff_workflow = res.data.list[0].wff_workflow
             this.formJson.wff_node = res.data.list[0].wff_node
-            this.formJson.wff_json = JSON.parse(res.data.list[0].wff_json)
-            console.log(res.data.list[0].wff_json)
-
+            if(res.data.list[0].wff_json != null){
+              this.formJson.wff_json = res.data.list[0].wff_json
+            }
          }, (error) => { })
     },
     //控件列表
@@ -411,9 +413,8 @@ export default {
           wff_node:this.formJson.wff_node,
           wff_workflow:this.formJson.wff_workflow,
           wff_abled:this.formJson.wff_abled,
-          wff_json:JSON.stringify(this.formJson.wff_json)
+          wff_json: JSON.stringify(this.formJson.wff_json)
         },{emulateJSON: true}).then((res) => {
-        console.log(res)
         if(res.data.errorCode == 1){
           this.dialogCreateFormVisible = false
           this.$notify({
@@ -422,7 +423,12 @@ export default {
             duration: 0,
             type: 'success'
           });
+          if(wff_id == 0){
+            this.$router.push('forms/list')
+          }
         }else{
+
+
 
         }
 
