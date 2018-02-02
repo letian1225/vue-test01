@@ -1,12 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-//components
+
+//登录
 import Login from '@/components/login'
+
 //桌面
 import Home from '@/views/home/home'
 
 //模块
 import ModuleList from '@/views/module/list'
+
+//列表
+import List from '@/views/list/list'
+import ListEdit from '@/views/list/edit'
 
 //表单
 import Form from '@/views/forms/form'
@@ -17,7 +23,6 @@ import FormList from '@/views/forms/list'
 //统计
 import Statistics from '@/views/statistics/list'
 import StatisticsEdit from '@/views/statistics/edit'
-
 
 Vue.use(Router)
 
@@ -67,6 +72,16 @@ export default new Router({
       path: '/statistics/edit',
       name: 'StatisticsEdit',
       component: StatisticsEdit
+    },
+    {
+      path: '/list/list',
+      name: 'List',
+      component: List
+    },
+    {
+      path: '/list/edit',
+      name: 'ListEdit',
+      component: ListEdit
     },
   ]
 })

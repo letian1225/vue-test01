@@ -23,9 +23,11 @@ export default {
       value: ''
     }
   },
+  
   created(){
     this.listWfForms()
   },
+  props:['wffid'],
   methods:{
     formIdFun(){
       this.$emit('formIdFun',this.value)
@@ -35,7 +37,8 @@ export default {
       Vue.http.jsonp("http://milibangong.cn/Appservice/Forms/listWfForms")
          .then((res) => {
             this.options = res.data.list
-            
+            this.value = this.wffid
+            console.log(this.wffid)
          }, (error) => { })
     },
   },

@@ -1,5 +1,4 @@
 <template>
-	
 	<div>
 		<el-container>
 			<el-header>
@@ -12,93 +11,67 @@
 				
 				<el-main>
 					<div class="page-title">
-						<span>统计管理</span>
+						<span>列表管理</span>
 					</div>
 					<div class="page-body">
-						<el-form :inline="true" class="form-inline">
-						  	<el-button type="primary" size="small"  @click="$router.push('edit')">新建统计</el-button>
+						<el-form :inline="true">
+						  <el-form-item label="选择模块：">
+						    <moduleList @setModule="setModule"></moduleList>
+						  </el-form-item>
+						  <el-form-item>
+						    <el-button type="primary" @click="$router.push('edit')">新建列表</el-button>
+						  </el-form-item>
 						</el-form>
+
 						<el-table
 						    :data="tableData"
 						    style="width: 100%" max-height="750">
-						    <el-table-column  type="expand">
-						    	<template slot-scope="props">
-				    	        <el-form label-position="left" inline class="table-expand" label-width="120px">
-				    	          <el-form-item label="统计字段：">
-				    	            <span>{{props.row.ws_json.statisticsField}}</span>
-				    	          </el-form-item>
-				    	          <el-form-item label="统计方式：">
-				    	            <span>{{props.row.ws_json.statisticsType}}</span>
-				    	          </el-form-item>
-				    	          <el-form-item label="显示字段：">
-				    	          	<span>{{props.row.ws_json.showField}}</span>
-				    	          </el-form-item>
-				    	          <el-form-item label="筛选条件：">
-				    	          		<div class="dl-layout">
-				    	          			<dl>
-				    	          				<dd v-for="(item,key) in props.row.ws_json.whereField[0]">{{key}}</dd>
-				    	          			</dl>
-				    	          			<dl v-for="(value, index) in props.row.ws_json.whereField"><dt v-for="(item, key) in value">{{item}}</dt></dl>
-				    	          		</div>
-				    	          </el-form-item>
-				    	          <el-form-item label="分组条件：">
-				    	            <span>{{props.row.ws_json.groupField}}</span>
-				    	          </el-form-item>
-				    	          <el-form-item label="排序条件：">
-				    	            <div class="dl-layout">
-				    	            	<dl>
-				    	            		<dd v-for="(item,key) in props.row.ws_json.orderField[0]">{{key}}</dd>
-				    	            	</dl>
-				    	            	<dl v-for="(value, index) in props.row.ws_json.orderField"><dt v-for="(item, key) in value">{{item}}</dt></dl>
-				    	            </div>
-				    	          </el-form-item>
-				    	        </el-form>
-				    	      </template>
-						    </el-table-column>
+						   
 						    <el-table-column 
-						      prop="ws_id"
+						      prop="wd_id"
 						      label="ID">
 						    </el-table-column>
+
 						    <el-table-column
-						      prop="ws_name"
+						      prop="wd_name"
 						      label="英文名称">
 						    </el-table-column>
 						    <el-table-column
-						      prop="ws_name_ch"
+						      prop="wd_name_ch"
 						      label="中文名称">
 						    </el-table-column>
 						    <el-table-column
-						      prop="ws_company"
+						      prop="wd_company"
 						      label="公司ID">
 						    </el-table-column>
 						    <el-table-column
-						      prop="ws_module"
+						      prop="wd_module"
 						      label="模块ID">
 						    </el-table-column>
 						    <el-table-column
-						      prop="ws_form"
+						      prop="wd_form"
 						      label="表单ID">
 						    </el-table-column>
 						    <el-table-column
-						      prop="ws_abled"
+						      prop="wd_abled"
 						      label="状态">
 						      <template slot-scope="scope">
-						      	{{scope.row.ws_abled == 1 ? "启用" : "禁用"}}
+						      	{{scope.row.wd_abled == 1 ? "启用" : "禁用"}}
 						      </template>
 						    </el-table-column>
 						    <el-table-column
-						      prop="ws_create_time"
+						      prop="wd_create_time"
 						      label="创建时间">
 						    </el-table-column>
 						    <el-table-column
-						      prop="ws_create_userid"
+						      prop="wd_create_userid"
 						      label="创建用户ID">
 						    </el-table-column>
 						    <el-table-column label="操作"  width="120">
 						      <template slot-scope="scope">
 						        <el-button
-						          type="text"
-						          size="small" @click="dialogEdit = true, onEdit(scope.row)">
+						          type="primary"
+						          size="mini" @click="dialogEdit = true, onEdit(scope.row)">
 						          编辑
 						        </el-button>
 						        <!-- <el-button
@@ -133,6 +106,7 @@
 import Vue from 'vue'
 import navbar from '../../components/navbar'
 import sidemenu from '../../components/sidemenu'
+import moduleList from '../../components/moduleList'
 
 export default {
   name:"list",
@@ -142,23 +116,20 @@ export default {
     }
   },
   created(){
-  	this.listWfStatistics()
+  	
   },
   computed:{},
   filters:{},
   methods: {
-  	listWfStatistics(){
-		Vue.http.jsonp("http://milibangong.cn/Appservice/Statistics/listWfStatistics?ws_company=0")
+  	listWfDataList(wd_module){
+		Vue.http.jsonp("http://milibangong.cn/Appservice/DataList/listWfDataList",{params: { wd_module: wd_module}})
 		   .then((res) => {
 		   		this.tableData = res.data.list
-		   		for(var i = 0; i < this.tableData.length; i++){
-		   			if(this.tableData[i].ws_json !== "undefined"){
-		   				this.tableData[i].ws_json = JSON.parse(this.tableData[i].ws_json)
-		   			}
-		   		}
-		   		
-		   		
+		   		console.log(this.tableData)
 		   }, (error) => { })
+  	},
+  	setModule(msg){
+  		this.listWfDataList(msg)
   	},
   	onDelete(wm_id){
   		
@@ -167,7 +138,7 @@ export default {
   		this.$router.push({name:'StatisticsEdit',query:{ws_id:row.ws_id}});
   	}
   },
-  components:{navbar, sidemenu}
+  components:{navbar, sidemenu, moduleList}
 }
 </script>
 

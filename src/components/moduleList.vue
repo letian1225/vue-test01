@@ -25,7 +25,8 @@ export default {
   props:['getModuel'],
   created(){
     this.listWfModule()
-    this.value = this.getModuel
+    
+    
     
   },
   methods:{
@@ -36,7 +37,8 @@ export default {
       Vue.http.jsonp("http://milibangong.cn/Appservice/Module/listWfModule")
          .then((res) => {
             this.options = res.data.list
-            console.log(res.data.list)
+            this.value = this.getModuel
+            console.log(this.value)
          }, (error) => { })
     },
   },

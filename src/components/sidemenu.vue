@@ -11,12 +11,21 @@
           <el-menu-item index="/module/list">模块管理</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
-      <el-menu-item index="2">
+      <el-submenu index="2">
+        <template slot="title">
+          <i class="fa fa-th"></i>
+          <span slot="title">列表</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item index="/list/list">列表管理</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
+      <el-menu-item index="3">
         <i class="fa fa-sitemap"></i>
         <span slot="title">工作流</span>
       </el-menu-item>
       
-      <el-submenu index="3">
+      <el-submenu index="4">
         <template slot="title">
           <i class="fa fa-keyboard-o"></i>
           <span slot="title">表单</span>
@@ -28,7 +37,7 @@
         </el-menu-item-group>
       </el-submenu>
 
-      <el-submenu index="4">
+      <el-submenu index="5">
         <template slot="title">
           <i class="fa fa-line-chart"></i>
           <span slot="title">统计</span>
@@ -38,7 +47,7 @@
         </el-menu-item-group>
       </el-submenu>
 
-      <el-submenu index="5">
+      <el-submenu index="6">
         <template slot="title">
           <i class="fa fa-key"></i>
           <span slot="title">权限</span>
