@@ -1,22 +1,14 @@
 <template>
-  <div>
-    <el-menu
-    	:default-active="$route.path" 
-      router
-    	mode="horizontal" 
-      background-color="#545c64"
-      text-color="#fff"
-      active-text-color="#ffd04b"
-    	@select="handleSelect">
-      	<el-menu-item index="/home">我的桌面</el-menu-item>
-        <el-menu-item index="/home">系统设置</el-menu-item>
-      	<el-submenu index="9" style="float:right; margin:0 20px 0 0;">
-	        <template slot="title">当前登录用户：Eason</template>
-	        <el-menu-item index="9-1">个人设置</el-menu-item>
-	        <el-menu-item index="9-2">退出登录</el-menu-item>
-      	</el-submenu>
-
-    </el-menu>
+  <div class="header">
+    <span class="brand">
+        大连翼网科技有限公司
+    </span>
+    <div class="nav">
+      <router-link to="/home/home">我的工作台</router-link>
+      <router-link to="/custom/home">自定义管理</router-link>
+      <router-link to="/sign/home">考勤管理</router-link>
+      <a href="javascript:;">系统设置</a>
+    </div>
   </div>
 </template>
 
@@ -25,20 +17,14 @@
 export default {
   name: 'NavBar',
   data () {
-    return {
-    	activeIndex: '1',
-      company:0
-    }
+    return {}
   },
   methods:{
-  	handleSelect(key, keyPath) {
-    	console.log(key, keyPath);
-  	}
   },
   components:{}
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+  
 </style>

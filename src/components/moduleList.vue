@@ -25,9 +25,6 @@ export default {
   props:['getModuel'],
   created(){
     this.listWfModule()
-    
-    
-    
   },
   methods:{
     setModule(){
