@@ -9,6 +9,34 @@
 		<div class="sign-body">
 			
 			<div class="data-layout">
+        <table class="data-table-layout bordered">
+          <thead>
+            <tr>
+              <th>应出勤工时</th>
+              <th>出勤工时</th>
+              <th>打卡时长</th>
+              <th>请假（次）</th>
+              <th>外出（次）</th>
+              <th>迟到（次）</th>
+              <th>早退（次）</th>
+              <th>消异常次数</th>
+              <th>消异常时长</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>200</strong><small>小时</small></td>
+              <td><strong>200</strong><small>小时</small></td>
+              <td><strong>200</strong><small>小时</small></td>
+              <td><strong>200</strong><small>小时</small></td>
+              <td><strong>200</strong><small>小时</small></td>
+              <td><strong>200</strong><small>小时</small></td>
+              <td><strong>200</strong><small>小时</small></td>
+              <td><strong>200</strong><small>小时</small></td>
+              <td><strong>200</strong><small>小时</small></td>
+            </tr>
+          </tbody>
+        </table>
 				<fullCalendar :events="fcEvents"
 				  first-day='1' locale="zh-cn"
 				  @changeMonth="changeMonth"
