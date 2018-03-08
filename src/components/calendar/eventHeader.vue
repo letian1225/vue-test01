@@ -5,23 +5,33 @@
       </slot>
     </div>
     <div class="header-center">
-      <select v-model="year" @change="go">
-        <option v-for="item in yearList" :value="item">{{item}}年</option>
-      </select>
-      <select v-model="month" @change="go">
-        <option value="01">一月</option>
-        <option value="02">二月</option>
-        <option value="03">三月</option>
-        <option value="04">四月</option>
-        <option value="05">五月</option>
-        <option value="06">六月</option>
-        <option value="07">七月</option>
-        <option value="08">八月</option>
-        <option value="09">九月</option>
-        <option value="10">十月</option>
-        <option value="11">十一月</option>
-        <option value="12">十二月</option>
-      </select>
+      
+      <el-select v-model="year" @change="go">
+         <el-option
+           v-for="item in yearList"
+           :key="item"
+           :label="item"
+           :value="item">
+         </el-option>
+       </el-select>
+
+       <el-select v-model="month" @change="go">
+          <el-option label="一月" value="01"></el-option>
+          <el-option label="二月" value="02"></el-option>
+          <el-option label="三月" value="03"></el-option>
+          <el-option label="四月" value="04"></el-option>
+          <el-option label="五月" value="05"></el-option>
+          <el-option label="六月" value="06"></el-option>
+          <el-option label="七月" value="07"></el-option>
+          <el-option label="八月" value="08"></el-option>
+          <el-option label="九月" value="09"></el-option>
+          <el-option label="十月" value="10"></el-option>
+          <el-option label="十一月" value="11"></el-option>
+          <el-option label="十二月" value="12"></el-option>
+       </el-select>
+
+      
+        
     </div>
     <div class="header-right">
       <slot name="header-right">
@@ -72,7 +82,7 @@ export default {
   computed: {
     yearList(){
       let year = [];
-      for(let i = 2000; i < 2030; i++){
+      for(let i = 2018; i <= 2030; i++){
         year.push(i)
       }
       return year

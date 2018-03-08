@@ -41,13 +41,51 @@ import customStatisticsEdit from '@/views/custom/statistics/edit'
 
 
 /*------------------------考勤管理-------------------------*/
+
 //主页
 import sign from '@/views/sign/home'
+
 /*我的考勤*/
+
 //考勤打卡
 import mySignPunchCard from '@/views/sign/mySign/punchCard'
 //我的记录
 import mySignMyRecord from '@/views/sign/mySign/myRecord'
+//我的申请
+import mySignMyApply from '@/views/sign/mySign/myApply'
+//我的班次
+import mySignMyClasses from '@/views/sign/mySign/myClasses'
+
+/*排班管理*/
+
+//班次设置
+import scheduleManageClassesSetting from '@/views/sign/scheduleManage/classesSetting'
+//班次安排
+import scheduleManageClassesPlan from '@/views/sign/scheduleManage/classesPlan'
+//班次导出
+import scheduleManageClassesExport from '@/views/sign/scheduleManage/classesExport'
+
+/*考勤管理*/
+
+//考勤记录
+import signManageSignRecord from '@/views/sign/signManage/signRecord'
+//申请管理
+import signManageApplyManage from '@/views/sign/signManage/applyManage'
+//考勤统计
+import signManageSignStatistics from '@/views/sign/signManage/signStatistics'
+//类型设置
+import signManageTypeSetting from '@/views/sign/signManage/typeSetting'
+//考勤导出
+import signManageSignExport from '@/views/sign/signManage/signExport'
+
+/*外勤管理*/
+
+//外勤管理
+import outsideManageOutsideManage from '@/views/sign/outsideManage/outsideManage'
+
+
+
+
 
 
 Vue.use(Router)
@@ -120,7 +158,51 @@ export default new Router({
         {
           path: '/sign/mySign/myRecord',
           component: mySignMyRecord,
-        }
+        },
+        {
+          path: '/sign/mySign/myApply',
+          component: mySignMyApply,
+        },
+        {
+          path: '/sign/mySign/myClasses',
+          component: mySignMyClasses,
+        },
+        {
+          path: '/sign/scheduleManage/classesSetting',
+          component: scheduleManageClassesSetting,
+        },
+        {
+          path: '/sign/scheduleManage/classesPlan',
+          component: scheduleManageClassesPlan,
+        },
+        {
+          path: '/sign/scheduleManage/classesExport',
+          component: scheduleManageClassesExport,
+        },
+        {
+          path: '/sign/signManage/signRecord',
+          component: signManageSignRecord,
+        },
+        {
+          path: '/sign/signManage/applyManage',
+          component: signManageApplyManage,
+        },
+        {
+          path: '/sign/signManage/signStatistics',
+          component: signManageSignStatistics,
+        },
+        {
+          path: '/sign/signManage/typeSetting',
+          component: signManageTypeSetting,
+        },
+        {
+          path: '/sign/signManage/signExport',
+          component: signManageSignExport,
+        },
+        {
+          path: '/sign/outsideManage/outsideManage',
+          component: outsideManageOutsideManage,
+        },
       ]
     },
   ]
