@@ -53,10 +53,15 @@
           <el-menu-item index="/custom/list/list">列表管理</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
-      <el-menu-item index="6">
-        <i class="fa fa-sitemap"></i>
-        <span slot="title">工作流</span>
-      </el-menu-item>
+      <el-submenu index="6">
+        <template slot="title">
+          <i class="fa fa-sitemap"></i>
+          <span slot="title">工作流</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item index="/custom/workflow/workflow">工作流管理</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
       
       
 

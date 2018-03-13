@@ -33,8 +33,8 @@ import customListEdit from '@/views/custom/list/edit'
 //统计管理
 import customStatistics from '@/views/custom/statistics/statistics'
 import customStatisticsEdit from '@/views/custom/statistics/edit'
-
-
+//工作流
+import customWorkflow from '@/views/custom/workflow/workflow'
 
 
 
@@ -144,6 +144,10 @@ export default new Router({
         {
           path: '/custom/statistics/edit',
           component: customStatisticsEdit,
+        },
+        {
+          path: '/custom/workflow/workflow',
+          component: customWorkflow,
         },
       ]
     },
