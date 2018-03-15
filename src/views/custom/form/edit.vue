@@ -12,22 +12,28 @@
     </div>
     
 
-    <el-dialog title="保存表单" :visible.sync="dialogCreateFormVisible">
-        <el-form ref="form" :model="formJson" label-width="120px">
+    <el-dialog title="保存表单" :visible.sync="dialogCreateFormVisible" width="680px">
+        <el-form ref="form" :model="formJson" label-width="220px">
           <el-form-item label="表单名称">
-            <el-input v-model="formJson.wff_name"></el-input>
+            <el-input v-model="formJson.wff_name" style="width:192px;"></el-input>
           </el-form-item>
-          <el-form-item label="所属公司ID">
+          <el-form-item label="所属公司ID" style="display:none;">
             <el-input v-model="formJson.wff_company"></el-input>
           </el-form-item>
           <el-form-item label="归属模块">
             <moduleList @setModule="setModule" :getModuel="formJson.wff_module"></moduleList>
           </el-form-item>
-          <el-form-item label="归属工作流ID">
-            <el-input v-model="formJson.wff_workflow"></el-input>
-          </el-form-item>
-          <el-form-item label="归属节点ID">
-            <el-input v-model="formJson.wff_node"></el-input>
+          <el-form-item label="归属工作流">
+            <el-select v-model="formJson.wff_workflow" placeholder="请选择">
+              <el-option
+                v-for="item in workflowData"
+                :key="item.wf_id"
+                :label="item.wf_name"
+                :value="item.wf_id">
+                  <span style="float: left;">{{ item.wf_name }}</span>
+                  <span style="float: right;">{{ item.wf_id }}</span>
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="是否启用">
               <el-switch v-model="formJson.wff_abled" active-value="1" inactive-value="0"></el-switch>
@@ -314,12 +320,12 @@ export default {
         formJson:{
           wff_name:"form_" + this.KEY,
           wff_company:this.CID(),
-          wff_module:"3",
-          wff_workflow:"3",
-          wff_node:"3",
+          wff_module:"",
+          wff_workflow:"",
           wff_abled:"1",
           wff_json:[]
         },
+        workflowData:[],
      }
   },
   computed: {},
@@ -332,8 +338,25 @@ export default {
     empty(){
       this.formJson.wff_json = []
     },
+    listWfWorkFlow(wf_module) {
+      
+      Vue.http
+        .jsonp(this.URL + "WorkFlow/listWfWorkFlow", {
+          params: { wf_module: wf_module }
+        })
+        .then(
+          res => {
+            this.workflowData = res.data.list;
+          },
+          error => {}
+        );
+    },
     setModule(msg){
+      
       this.formJson.wff_module = msg
+      this.workflowData = []
+      this.formJson.wff_workflow = ""
+      this.listWfWorkFlow(msg)
     },
     //数据源列表
     getCodeList(){

@@ -10,10 +10,10 @@
 				<el-button type="primary" size="small"  @click="onCreateForm('0')">新建表单</el-button>
 			</div>
 			<el-table :data="tableData" border style="width: 100%" max-height="550">
-			    <el-table-column
+			    <!-- <el-table-column
 			      prop="wff_id"
 			      label="ID">
-			    </el-table-column>
+			    </el-table-column> -->
 			    <el-table-column
 			      prop="wff_name"
 			      label="表单名称">
@@ -29,10 +29,6 @@
 			    <el-table-column
 			      prop="wff_workflow"
 			      label="归属工作流ID">
-			    </el-table-column>
-			    <el-table-column
-			      prop="wff_node"
-			      label="归属节点ID">
 			    </el-table-column>
 			    <el-table-column
 			      prop="wff_abled"
