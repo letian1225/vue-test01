@@ -18,25 +18,21 @@
                 :data="tableData" 
                 style="width: 100%" max-height="550">
                 <el-table-column
-                    prop="wf_id"
-                    label="ID">
-                </el-table-column>
-                <el-table-column
-                    prop="wf_name"
                     label="名称">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <p>ID: {{ scope.row.wf_id }}</p>
+                        <p>公司ID: {{ scope.row.wf_company }}</p>
+                        <p>模块ID: {{ scope.row.wf_module }}</p>
+                        <p>分类: {{ scope.row.wf_type }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          <el-tag size="medium">{{ scope.row.wf_name }}</el-tag>
+                        </div>
+                      </el-popover>
+                    </template>
                 </el-table-column>
-                <el-table-column
-                    prop="wf_company"
-                    label="公司ID">
-                </el-table-column>
-                <el-table-column
-                    prop="wf_module"
-                    label="模块ID">
-                </el-table-column>
-                <el-table-column
-                    prop="wf_type"
-                    label="分类">
-                </el-table-column>
+                
+                
                 <el-table-column
                     prop="wc_abled"
                     label="是否启用">
@@ -49,20 +45,17 @@
                     <template slot-scope="scope">
                     <el-button
                         @click="dialogEdit = true, edit(scope.row)"
-                        type="text"
-                        size="small">
+                        size="mini">
                         编辑
                     </el-button>
                     <el-button
                         @click="dialogDetail = true, listNodes(scope.row.wf_id)"
-                        type="text"
-                        size="small">
+                        size="mini" type="info">
                         节点管理
                     </el-button>
                     <el-button 
                         @click="delWfWorkFlow(scope.row.wf_id)"
-                        type="text"
-                        size="small">
+                        size="mini" type="danger">
                         删除
                     </el-button>
                     </template>
@@ -73,7 +66,7 @@
 
 				<el-dialog
             width="80%"
-            title="工作流管理"
+            title="工作流节点管理"
             :visible.sync="dialogDetail">
 						<el-form :inline="true">
 								<el-form-item>
@@ -85,35 +78,27 @@
                 style="width: 100%" max-height="550">
                 <el-table-column
                     prop="wn_id"
-                    label="ID">
+                    label="节点ID">
                 </el-table-column>
                 <el-table-column
-                    prop="wn_name"
                     label="名称">
+                    <template slot-scope="scope">
+                      <el-popover trigger="hover" placement="top">
+                        <p>节点ID: {{ scope.row.wn_id }}</p>
+                        <p>公司ID: {{ scope.row.wn_company }}</p>
+                        <p>模块ID: {{ scope.row.wn_module }}</p>
+                        <p>序列号: {{ scope.row.wn_step }}</p>
+                        <p>节点分类: {{ scope.row.wn_node_type }}</p>
+                        <p>节点处理人ID: {{ scope.row.wn_user }}</p>
+                        <div slot="reference" class="name-wrapper">
+                          <el-tag size="medium">{{ scope.row.wn_name }}</el-tag>
+                        </div>
+                      </el-popover>
+                    </template>
                 </el-table-column>
 								<el-table-column
                     prop="wn_workflow"
                     label="所属工作流">
-                </el-table-column>
-                <el-table-column
-                    prop="wn_company"
-                    label="公司ID">
-                </el-table-column>
-                <el-table-column
-                    prop="wn_module"
-                    label="模块ID">
-                </el-table-column>
-                <el-table-column
-                    prop="wn_step"
-                    label="序列号">
-                </el-table-column>
-								<el-table-column
-                    prop="wn_node_type"
-                    label="节点类型">
-                </el-table-column>
-								<el-table-column
-                    prop="wn_user"
-                    label="节点处理人id">
                 </el-table-column>
 								<el-table-column
                     prop="wn_node_true"
@@ -131,14 +116,13 @@
                     <template slot-scope="scope">
                     <el-button
                         @click="dialogNodesEdit = true, editN(scope.row)"
-                        type="text"
-                        size="small">
+                        size="mini">
                         编辑
                     </el-button>
                     <el-button 
                         @click="deleteNode(scope.row.wn_id)"
-                        type="text"
-                        size="small">
+                        type="danger"
+                        size="mini">
                         删除
                     </el-button>
                     </template>
@@ -164,16 +148,42 @@
                 <el-input v-model="editNodesData.wn_step" style="width:217px;"></el-input>
                 </el-form-item>
 								<el-form-item label="节点类型">
-                <el-input v-model="editNodesData.wn_node_type" style="width:217px;"></el-input>
+                  <el-select v-model="editNodesData.wn_node_type" placeholder="请选择" style="width:217px;">
+                    <el-option
+                      v-for="item in nodeTypeData"
+                      :key="item.wcd_value"
+                      :label="item.wcd_text"
+                      :value="item.wcd_value">
+                    </el-option>
+                  </el-select>
                 </el-form-item>
 								<el-form-item label="节点处理人id">
                 <el-input v-model="editNodesData.wn_user" style="width:217px;"></el-input>
                 </el-form-item>
 								<el-form-item label="通过节点编号">
-                <el-input v-model="editNodesData.wn_node_true" style="width:217px;"></el-input>
+                <el-select v-model="editNodesData.wn_node_true" placeholder="请选择" style="width:217px;">
+                    <el-option
+                      v-for="item in nodesData"
+                      :key="item.wn_id"
+                      :label="item.wn_id"
+                      :value="item.wn_id">
+                      <span style="float: left">{{ item.wn_id }}</span>
+                      <span style="float: right; color: #8492a6; font-size: 13px">{{ item.wn_name }}</span>
+                    </el-option>
+                </el-select>
+                
                 </el-form-item>
 								<el-form-item label="未通过节点编号">
-                <el-input v-model="editNodesData.wn_node_false" style="width:217px;"></el-input>
+                <el-select v-model="editNodesData.wn_node_false" placeholder="请选择" style="width:217px;">
+                    <el-option
+                      v-for="item in nodesData"
+                      :key="item.wn_id"
+                      :label="item.wn_id"
+                      :value="item.wn_id">
+                      <span style="float: left">{{ item.wn_id }}</span>
+                      <span style="float: right; color: #8492a6; font-size: 13px">{{ item.wn_name }}</span>
+                    </el-option>
+                </el-select>
                 </el-form-item>
 								<el-form-item label="备注">
                 <el-input type="textarea" v-model="editNodesData.wn_remarks"></el-input>
@@ -203,16 +213,42 @@
                 <el-input v-model="editNodesData.wn_step" style="width:217px;"></el-input>
                 </el-form-item>
 								<el-form-item label="节点类型">
-                <el-input v-model="editNodesData.wn_node_type" style="width:217px;"></el-input>
+                  <el-select v-model="editNodesData.wn_node_type" placeholder="请选择" style="width:217px;">
+                    <el-option
+                      v-for="item in nodeTypeData"
+                      :key="item.wcd_value"
+                      :label="item.wcd_text"
+                      :value="item.wcd_value">
+                    </el-option>
+                  </el-select>
                 </el-form-item>
 								<el-form-item label="节点处理人id">
                 <el-input v-model="editNodesData.wn_user" style="width:217px;"></el-input>
                 </el-form-item>
 								<el-form-item label="通过节点编号">
-                <el-input v-model="editNodesData.wn_node_true" style="width:217px;"></el-input>
+                <el-select v-model="editNodesData.wn_node_true" placeholder="请选择" style="width:217px;">
+                    <el-option
+                      v-for="item in nodesData"
+                      :key="item.wn_id"
+                      :label="item.wn_id"
+                      :value="item.wn_id">
+                      <span style="float: left">{{ item.wn_id }}</span>
+                      <span style="float: right; color: #8492a6; font-size: 13px">{{ item.wn_name }}</span>
+                    </el-option>
+                </el-select>
+                
                 </el-form-item>
 								<el-form-item label="未通过节点编号">
-                <el-input v-model="editNodesData.wn_node_false" style="width:217px;"></el-input>
+                <el-select v-model="editNodesData.wn_node_false" placeholder="请选择" style="width:217px;">
+                    <el-option
+                      v-for="item in nodesData"
+                      :key="item.wn_id"
+                      :label="item.wn_id"
+                      :value="item.wn_id">
+                      <span style="float: left">{{ item.wn_id }}</span>
+                      <span style="float: right; color: #8492a6; font-size: 13px">{{ item.wn_name }}</span>
+                    </el-option>
+                </el-select>
                 </el-form-item>
 								<el-form-item label="备注">
                 <el-input type="textarea" v-model="editNodesData.wn_remarks"></el-input>
@@ -242,7 +278,14 @@
                 <el-switch v-model="editData.wf_abled" active-value="1" inactive-value="0"></el-switch>
                 </el-form-item>
                 <el-form-item label="类型">
-                <el-input v-model="editData.wf_type" style="width:217px;"></el-input>
+                  <el-select v-model="editData.wf_type" placeholder="请选择" style="width:217px;">
+                    <el-option
+                      v-for="item in workflowNodeTypeData"
+                      :key="item.wcd_value"
+                      :label="item.wcd_text"
+                      :value="item.wcd_value">
+                    </el-option>
+                  </el-select>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="editWfWorkFlow(0)">立即保存</el-button>
@@ -267,7 +310,14 @@
                 <el-switch v-model="editData.wf_abled" active-value="1" inactive-value="0"></el-switch>
                 </el-form-item>
                 <el-form-item label="类型">
-                <el-input v-model="editData.wf_type" style="width:217px;"></el-input>
+                  <el-select v-model="editData.wf_type" placeholder="请选择" style="width:217px;">
+                    <el-option
+                      v-for="item in workflowNodeTypeData"
+                      :key="item.wcd_value"
+                      :label="item.wcd_text"
+                      :value="item.wcd_value">
+                    </el-option>
+                  </el-select>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="editWfWorkFlow(editData.wf_id)">立即保存</el-button>
@@ -298,10 +348,13 @@ export default {
       tableData: [],
       editData: {
         wf_abled: "1"
-			},
-			nodesData:[],
-			editNodesData:{},
-			wn_workflow:"",
+      },
+      nodesData: [],
+      editNodesData: {},
+      wn_workflow: "",
+
+      workflowNodeTypeData: "",
+      nodeTypeData: "",
       dialogCreate: false,
       dialogEdit: false,
       dialogDetail: false,
@@ -311,12 +364,14 @@ export default {
   },
   created() {
     this.listWfWorkFlow(0);
+    this.workflowNodeType();
+    this.nodeType();
   },
   computed: {},
   methods: {
-		listNodes(wn_workflow){
-			this.wn_workflow = wn_workflow
-			Vue.http
+    listNodes(wn_workflow) {
+      this.wn_workflow = wn_workflow;
+      Vue.http
         .jsonp(this.URL + "Nodes/listNodes", {
           params: { wn_workflow: wn_workflow }
         })
@@ -326,38 +381,63 @@ export default {
           },
           error => {}
         );
-		},
-		editN(row){
-			this.editNodesData = row
-		},
-		editNode(wn_id) {
+    },
+    editN(row) {
+      this.editNodesData = row;
+    },
+    workflowNodeType() {
+      Vue.http
+        .jsonp(this.URL + "FormWidgets/getCodeDetailById", {
+          params: { wc_id: "18" }
+        })
+        .then(
+          res => {
+            this.workflowNodeTypeData = res.data.list;
+          },
+          error => {}
+        );
+    },
+    nodeType() {
+      Vue.http
+        .jsonp(this.URL + "FormWidgets/getCodeDetailById", {
+          params: { wc_id: "4" }
+        })
+        .then(
+          res => {
+            this.nodeTypeData = res.data.list;
+            console.log(this.nodeTypeData);
+          },
+          error => {}
+        );
+    },
+    editNode(wn_id) {
       Vue.http
         .jsonp(this.URL + "Nodes/editNode", {
           params: {
             wn_id: wn_id,
             wn_name: this.editNodesData.wn_name,
             wn_company: this.CID(),
-						wn_module: this.editNodesData.wn_module,
-						wn_workflow: this.wn_workflow,
-						wn_step: this.editNodesData.wn_step,
-						wn_node_type:this.editNodesData.wn_node_type,
-						wn_user: this.editNodesData.wn_user,
-						wn_node_true: this.editNodesData.wn_node_true,
-						wn_node_false: this.editNodesData.wn_node_false,
-						wn_remarks: this.editNodesData.wn_remarks,
-						wn_node_action:this.editNodesData.wn_node_action
+            wn_module: this.editNodesData.wn_module,
+            wn_workflow: this.wn_workflow,
+            wn_step: this.editNodesData.wn_step,
+            wn_node_type: this.editNodesData.wn_node_type,
+            wn_user: this.editNodesData.wn_user,
+            wn_node_true: this.editNodesData.wn_node_true,
+            wn_node_false: this.editNodesData.wn_node_false,
+            wn_remarks: this.editNodesData.wn_remarks,
+            wn_node_action: this.editNodesData.wn_node_action
           }
         })
         .then(
           res => {
-            this.dialogNodesCreate = false
-						this.dialogNodesEdit = false
-						this.listNodes(this.wn_workflow)
+            this.dialogNodesCreate = false;
+            this.dialogNodesEdit = false;
+            this.listNodes(this.wn_workflow);
           },
           error => {}
         );
-		},
-		deleteNode(wn_id) {
+    },
+    deleteNode(wn_id) {
       this.$confirm("此操作删除该条数据, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -373,8 +453,8 @@ export default {
                 this.$message({
                   type: "success",
                   message: "删除成功!"
-								});
-								this.listNodes(this.wn_workflow)
+                });
+                this.listNodes(this.wn_workflow);
               } else {
                 this.$message({
                   type: "warning",
@@ -385,11 +465,10 @@ export default {
             error => {}
           );
       });
-
     },
     setModule(msg) {
-			this.editData.wf_module = msg;
-			this.editNodesData.wn_module = msg
+      this.editData.wf_module = msg;
+      this.editNodesData.wn_module = msg;
     },
     edit(row) {
       this.editData = row;
@@ -402,7 +481,6 @@ export default {
         .then(
           res => {
             this.tableData = res.data.list;
-            console.log(res);
           },
           error => {}
         );
@@ -423,6 +501,7 @@ export default {
           res => {
             this.dialogCreate = false;
             this.dialogEdit = false;
+            this.listWfWorkFlow(0);
           },
           error => {}
         );
@@ -443,8 +522,8 @@ export default {
                 this.$message({
                   type: "success",
                   message: "删除成功!"
-								});
-								this.listWfWorkFlow(0);
+                });
+                this.listWfWorkFlow(0);
               } else {
                 this.$message({
                   type: "warning",
@@ -455,7 +534,6 @@ export default {
             error => {}
           );
       });
-
     }
   },
 
