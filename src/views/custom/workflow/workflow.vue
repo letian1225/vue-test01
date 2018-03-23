@@ -9,13 +9,13 @@
             <div class="search-bar">
                 <el-form :inline="true">
                     <el-form-item>
-                        <el-button type="primary" @click="dialogCreate = true">新建工作流</el-button>
+                        <el-button  size="small"  type="primary" @click="dialogCreate = true">新建工作流</el-button>
                     </el-form-item>
                 </el-form>
             </div>
             
             <el-table
-                :data="tableData" 
+                :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
                 style="width: 100%" max-height="550">
                 <el-table-column
                     label="名称">
@@ -62,6 +62,8 @@
                 </el-table-column>
                 
             </el-table>
+
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
         </div>
 
 				<el-dialog
@@ -359,7 +361,10 @@ export default {
       dialogEdit: false,
       dialogDetail: false,
       dialogNodesEdit: false,
-      dialogNodesCreate: false
+      dialogNodesCreate: false,
+      total: 0, //默认数据总数
+      pagesize: 10, //每页的数据条数
+      currentPage: 1 //默认开始页面
     };
   },
   created() {
@@ -481,6 +486,7 @@ export default {
         .then(
           res => {
             this.tableData = res.data.list;
+            this.total = res.data.list.length;
           },
           error => {}
         );
@@ -534,6 +540,12 @@ export default {
             error => {}
           );
       });
+    },
+    handleSizeChange: function(size) {
+      this.pagesize = size;
+    },
+    handleCurrentChange: function(currentPage) {
+      this.currentPage = currentPage;
     }
   },
 

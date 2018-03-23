@@ -9,7 +9,7 @@
 			<div class="search-bar">
 				<el-button type="primary" size="small"  @click="onCreateForm('0')">新建表单</el-button>
 			</div>
-			<el-table :data="tableData" border style="width: 100%" max-height="550">
+			<el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" max-height="750">
 			    <!-- <el-table-column
 			      prop="wff_id"
 			      label="ID">
@@ -47,11 +47,13 @@
 			    </el-table-column>
 			    <el-table-column label="操作" fixed="right">
 			      <template slot-scope="scope">
-			        <el-button @click="onCreateForm(scope.row.wff_id)" type="primary" size="mini" icon="el-icon-edit"></el-button>
-			        <el-button @click="onGetFormData(scope.row.wff_id)" type="info" size="mini" icon="fa fa-database"></el-button>
+			        <el-button @click="onCreateForm(scope.row.wff_id)" size="mini">编辑</el-button>
+			        <el-button @click="onGetFormData(scope.row.wff_id)" type="info" size="mini">数据</el-button>
 			      </template>
 			    </el-table-column>
 			</el-table>
+			<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+			</el-pagination>
 
 		</div>
 
@@ -63,12 +65,12 @@
 	  		<table class="layout-table">
 	  			<thead>
 	  				<tr>
-	  					<th v-for="(value, i) in dataList[0]">{{value.labelName}}[{{value.name}}]</th>
+	  					<th v-for="(value, i) in dataList[0]" :key="i">{{value.labelName}}[{{value.name}}]</th>
 	  				</tr>
 	  			</thead>
 	  			<tbody>
-	  				<tr v-for="(item, i) in dataList">
-	  					<td v-for="(value, i) in item">{{value.value}}</td>
+	  				<tr v-for="(item, i) in dataList" :key="i">
+	  					<td v-for="(value, i) in item" :key="i">{{value.value}}</td>
 	  				</tr>
 	  			</tbody>
 	  		</table>
@@ -81,53 +83,70 @@
 
 
 <script>
-import Vue from 'vue'
+import Vue from "vue";
 export default {
-  name:"list",
+  name: "list",
   data() {
     return {
-    	loading:true,
-        tableData: [],
-        rowJson:[],
-        dialogShowJsonVisible:false,
-        dialogDataListVisible:false,
-        dataList: [],
+      loading: true,
+      tableData: [],
+      rowJson: [],
+      dialogShowJsonVisible: false,
+      dialogDataListVisible: false,
+      dataList: [],
+      total: 0, //默认数据总数
+      pagesize: 10, //每页的数据条数
+      currentPage: 1 //默认开始页面
+    };
+  },
+  created() {
+    this.listWfFormWidgets();
+  },
+  computed: {},
+  methods: {
+    onGetFormData(wff_id) {
+      this.dialogDataListVisible = true;
+      this.http
+        .jsonp(this.URL + "Statistics/getFormDataListByFormId", {
+          params: { wff_id: wff_id }
+        })
+        .then(
+          res => {
+            this.dataList = res.data.list;
+          },
+          error => {}
+        );
+    },
+    listWfFormWidgets() {
+      Vue.http.jsonp(this.URL + "Forms/listWfForms").then(
+        res => {
+          this.tableData = res.data.list;
+          this.total = res.data.list.length;
+          this.loading = false;
+        },
+        error => {}
+      );
+    },
+    showRowJson(rows) {
+      this.rowJson = JSON.parse(rows);
+    },
+    onCreateForm(wff_id) {
+      if (wff_id === 0) {
+        this.$router.push({ path: "/custom/form/edit", query: { wff_id: 0 } });
+      } else {
+        this.$router.push({
+          path: "/custom/form/edit",
+          query: { wff_id: wff_id }
+        });
+      }
+    },
+    handleSizeChange: function(size) {
+      this.pagesize = size;
+    },
+    handleCurrentChange: function(currentPage) {
+      this.currentPage = currentPage;
     }
   },
-  created(){
-  	this.listWfFormWidgets()
-  },
-  computed:{
-
-  },
-  methods: {
-  	onGetFormData(wff_id){
-  		this.dialogDataListVisible = true
-  		this.http.jsonp(this.URL+"Statistics/getFormDataListByFormId",{params: { wff_id: wff_id}})
-  		   .then((res) => {
-  		   		this.dataList = res.data.list
-
-  		   }, (error) => { })
-  	},
-  	listWfFormWidgets(){
-		Vue.http.jsonp(this.URL+"Forms/listWfForms")
-		   .then((res) => {
-		   		this.tableData = res.data.list
-		   		this.loading = false
-		   }, (error) => { })
-  	},
-  	showRowJson(rows){
-  		this.rowJson = JSON.parse(rows)
-  	},
-  	onCreateForm(wff_id){
-  		if(wff_id === 0){
-  			this.$router.push({path:'/custom/form/edit',query:{wff_id:0}});
-  		}else{
-  			this.$router.push({path:'/custom/form/edit',query:{wff_id:wff_id}});
-  		}
-  	},
-
-  },
-  components:{}
-}
+  components: {}
+};
 </script>

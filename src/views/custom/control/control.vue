@@ -11,8 +11,8 @@
 						</div>
 						
 						<el-table
-						    :data="tableData" border
-			    			style="width: 100%" max-height="550">
+						    :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+			    			style="width: 100%" max-height="750">
 						    <el-table-column
 						      prop="wfw_name_ch"
 						      label="控件中文名称">
@@ -29,25 +29,26 @@
 						        </template>
 						    </el-table-column>
 						    <el-table-column
-						      label="操作"  width="120">
+						      label="操作">
 						      <template slot-scope="scope">
 						        <el-button
 						          @click.native.prevent="editRowJson(scope.$index, tableData)"
 						          @click="dialogEditJsonVisible = true"
-						          type="text"
-						          size="small">
+						          size="mini">
 						          编辑
 						        </el-button>
 						        <el-button
 						          @click.native.prevent="showRowJson(scope.$index, tableData)"
 						          @click="dialogShowJsonVisible = true"
-						          type="text"
-						          icon="fa fa-code"
-						          size="small">
+						          type="info"
+						          size="mini">
+											结构
 						        </el-button>
 						      </template>
 						    </el-table-column>
 						</el-table>
+
+						<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
 						
 						
 						<el-dialog title="新建控件" :visible.sync="dialogAddJsonVisible">
@@ -99,7 +100,7 @@
 						  	    <el-input v-model="rowJson.wfw_icon"></el-input>
 						  	  </el-form-item>
 						  	  <div v-if="rowJson.wfw_name == 'listBox'">
-						  	  	<div v-for="item in rowJson.wfw_attr[0].type">
+						  	  	<div v-for="item in rowJson.wfw_attr[0].type" :key="item">
 						  	  		<el-form-item :label="item.wfwq_name">
 						  	  		  <el-input v-model="item.wfwq_name_ch"></el-input>
 						  	  		</el-form-item>
@@ -128,120 +129,144 @@
 
 
 <script>
-import Vue from 'vue'
+import Vue from "vue";
 
 const DIY_ATTR_JSON = {
-  "wfw_id": "0",
-  "wfw_name": "",
-  "wfw_name_ch": "",
-  "wfw_abled": "1",
-  "wfw_icon": "",
-  "wfw_attr": [
+  wfw_id: "0",
+  wfw_name: "",
+  wfw_name_ch: "",
+  wfw_abled: "1",
+  wfw_icon: "",
+  wfw_attr: [
     {
-      "uid": "",
-      "dataSource": "",
-      "labelName": "",
-      "display": "false",
-      "diy": []
+      uid: "",
+      dataSource: "",
+      labelName: "",
+      display: "false",
+      diy: []
     }
   ]
-}
-
+};
 
 const CHECK_ADD_CONTROL = {
-	wfw_name: [
-		{ required: true, message: '请输入英文控件名称', trigger: 'blur' },
-		{ min: 3, max: 15, message: '长度在 3 到 15 个字符', trigger: 'blur' }
-	],
-	wfw_name_ch: [
-		{ required: true, message: '请输入中文控件名称', trigger: 'blur' },
-		{ min: 3, max: 15, message: '长度在 3 到 15 个字符', trigger: 'blur' }
-	],
-	wfw_icon: [
-		{ required: true, message: '请输入控件图标Class', trigger: 'blur' },
-	]
-}
-
-
+  wfw_name: [
+    { required: true, message: "请输入英文控件名称", trigger: "blur" },
+    { min: 3, max: 15, message: "长度在 3 到 15 个字符", trigger: "blur" }
+  ],
+  wfw_name_ch: [
+    { required: true, message: "请输入中文控件名称", trigger: "blur" },
+    { min: 3, max: 15, message: "长度在 3 到 15 个字符", trigger: "blur" }
+  ],
+  wfw_icon: [
+    { required: true, message: "请输入控件图标Class", trigger: "blur" }
+  ]
+};
 
 export default {
-  name:"Home",
+  name: "Home",
   data() {
-        return {
-          tableData: [],
-          rowJson:[],
-          dialogAddJsonVisible:false,
-          dialogEditJsonVisible:false,
-          dialogShowJsonVisible:false,
-          newControlJson:DIY_ATTR_JSON,
-          newControlJsonRules: CHECK_ADD_CONTROL,
+    return {
+      tableData: [],
+      rowJson: [],
+      dialogAddJsonVisible: false,
+      dialogEditJsonVisible: false,
+      dialogShowJsonVisible: false,
+      newControlJson: DIY_ATTR_JSON,
+      newControlJsonRules: CHECK_ADD_CONTROL,
+      total: 0, //默认数据总数
+      pagesize: 10, //每页的数据条数
+      currentPage: 1 //默认开始页面
+    };
+  },
+  created() {
+    this.listWfFormWidgets();
+  },
+  computed: {
+    newAddControlJson() {
+      return (this.newControlJson = DIY_ATTR_JSON);
     }
   },
-  created(){
-	this.listWfFormWidgets()
-  },
-  computed:{
-  	newAddControlJson(){
-  		return this.newControlJson = DIY_ATTR_JSON
-  	},
-  },
   methods: {
-  	reload(){
-  		this.listWfFormWidgets()
-  	},
-  	listWfFormWidgets(){
-		Vue.http.jsonp(this.URL+"FormWidgets/listWfFormWidgets")
-	   .then((res) => {
-	   	this.tableData = res.data.list
-	   }, (error) => {})
-  	},
+    reload() {
+      this.listWfFormWidgets();
+    },
+    listWfFormWidgets() {
+      Vue.http.jsonp(this.URL + "FormWidgets/listWfFormWidgets").then(
+        res => {
+          this.tableData = res.data.list;
+          this.total = res.data.list.length;
+        },
+        error => {}
+      );
+    },
     editRowJson(index, rows) {
-    	this.rowJson = rows[index]
+      this.rowJson = rows[index];
     },
-    showRowJson(index, rows){
-    	this.rowJson = rows[index]
+    showRowJson(index, rows) {
+      this.rowJson = rows[index];
     },
-    onEditControlSubmit(){
-    	let j = JSON.stringify(this.rowJson)
-		Vue.http.jsonp(this.URL+"FormWidgets/editWfFormWidgets",{params: {jsonStr: j}})
-			.then((res) => {
-				this.$message(res.data.errorName)
-				this.dialogEditJsonVisible = false
-		   	}, (error) => {
-		   		this.$message(res.data.errorName)
-		   	})
-	},
-    onControlSubmit(formName){
-    	this.$refs[formName].validate((valid) => {
-          if (valid) {
-        	let j = JSON.stringify(this.newControlJson)
-    		Vue.http.jsonp(this.URL+"FormWidgets/editWfFormWidgets",{params: {jsonStr: j}})
-    			.then((res) => {
-    				this.$message(res.data.errorName)
-    				this.dialogAddJsonVisible = false
-    				this.reload()
-    		   	}, (error) => {
-    		   		this.$message(res.data.errorName)
-    		   	})
-          } else {
-            console.log('error submit!!')
-            return false
+    onEditControlSubmit() {
+      let j = JSON.stringify(this.rowJson);
+      Vue.http
+        .jsonp(this.URL + "FormWidgets/editWfFormWidgets", {
+          params: { jsonStr: j }
+        })
+        .then(
+          res => {
+            this.$message(res.data.errorName);
+            this.dialogEditJsonVisible = false;
+          },
+          error => {
+            this.$message(res.data.errorName);
           }
-        });
-    	
-	},
-	onAddControlSubmit(){
-		let diy = { "data_id":this.TOKEN(), "data_type": "", "data_name": "", "data": "" }
-		this.newControlJson.wfw_attr[0].diy.push(diy)
-	},
-	onResetControlSubmit(formName){
-		this.$refs[formName].resetFields()
-		this.$set(this.newControlJson.wfw_attr[0],'diy',[])
-		this.reload()
-	}
+        );
+    },
+    onControlSubmit(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          let j = JSON.stringify(this.newControlJson);
+          Vue.http
+            .jsonp(this.URL + "FormWidgets/editWfFormWidgets", {
+              params: { jsonStr: j }
+            })
+            .then(
+              res => {
+                this.$message(res.data.errorName);
+                this.dialogAddJsonVisible = false;
+                this.reload();
+              },
+              error => {
+                this.$message(res.data.errorName);
+              }
+            );
+        } else {
+          return false;
+        }
+      });
+    },
+    onAddControlSubmit() {
+      let diy = {
+        data_id: this.TOKEN(),
+        data_type: "",
+        data_name: "",
+        data: ""
+      };
+      this.newControlJson.wfw_attr[0].diy.push(diy);
+    },
+    onResetControlSubmit(formName) {
+      this.$refs[formName].resetFields();
+      this.$set(this.newControlJson.wfw_attr[0], "diy", []);
+      this.reload();
+    },
+    handleSizeChange: function(size) {
+      this.pagesize = size;
+    },
+    handleCurrentChange: function(currentPage) {
+      this.currentPage = currentPage;
+    }
   },
-  components:{}
-}
+  components: {}
+};
 </script>
 
 <style scoped lang="less">

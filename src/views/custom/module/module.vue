@@ -8,8 +8,8 @@
 				<el-button type="primary" size="small"  @click="dialogCreate = true">新建模块</el-button>
 			</div>
 			<el-table
-			    :data="tableData" border
-			    style="width: 100%" max-height="550">
+			    :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+			    style="width: 100%" max-height="750">
 			    <el-table-column
 			      prop="wm_id"
 			      label="模块ID">
@@ -51,16 +51,17 @@
 			    <el-table-column label="操作"  width="160" fixed="right">
 			      <template slot-scope="scope">
 			        <el-button
-			          type="primary" icon="el-icon-edit"
-			          size="mini" @click="dialogEdit = true, onEdit(scope.row)">
+			          size="mini" @click="dialogEdit = true, onEdit(scope.row)">编辑
 			        </el-button>
 			        <el-button
-			          type="info" icon="el-icon-delete"
-			          size="mini" @click="onDelete(scope.row.wm_id)">
+			          type="danger"
+			          size="mini" @click="onDelete(scope.row.wm_id)">删除
 			        </el-button>
 			      </template>
 			    </el-table-column>
 			</el-table>
+			<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+		</el-pagination>
 		</div>
 
 
@@ -151,115 +152,130 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import moduleIconData from '../../../api/module_icon_data'
+import Vue from "vue";
+import moduleIconData from "../../../api/module_icon_data";
 
 export default {
-  name:"list",
+  name: "list",
   data() {
     return {
-        tableData: [],
-        row:{
-        	"wm_id":"",
-        	"wm_name":"",
-			"wm_company":this.CID(),
-			"wm_users": this.UID(),
-			"wm_partments": "",
-			"wm_icon": "",
-			"wm_abled": "1",
-			"wm_tpl": "",
-
+      tableData: [],
+      row: {
+        wm_id: "",
+        wm_name: "",
+        wm_company: this.CID(),
+        wm_users: this.UID(),
+        wm_partments: "",
+        wm_icon: "",
+        wm_abled: "1",
+        wm_tpl: ""
+      },
+      moduleIcon: [],
+      dialogCreate: false,
+      dialogEdit: false,
+      total: 0, //默认数据总数
+      pagesize: 10, //每页的数据条数
+      currentPage: 1 //默认开始页面
+    };
+  },
+  created() {
+    this.listWfModule();
+    Vue.http.get("module_icon").then(
+      res => {
+        this.moduleIcon = res.data.module_icon;
+      },
+      error => {}
+    );
+  },
+  computed: {},
+  methods: {
+    setUrl(msg) {
+      this.row.wm_icon = msg;
+    },
+    listWfModule() {
+      Vue.http.jsonp(this.URL + "Module/listWfModule").then(
+        res => {
+          this.tableData = res.data.list;
+          this.total = res.data.list.length;
         },
-        moduleIcon:[],
-        dialogCreate:false,
-        dialogEdit:false
-        		
+        error => {}
+      );
+    },
+    onSave(wm_id) {
+      Vue.http
+        .jsonp(this.URL + "Module/editWfModule", {
+          params: {
+            wm_id: wm_id,
+            wm_name: this.row.wm_name,
+            wm_company: this.row.wm_company,
+            wm_users: this.row.wm_users,
+            wm_partments: this.row.wm_partments,
+            wm_icon: this.row.wm_icon,
+            wm_abled: this.row.wm_abled,
+            wm_tpl: this.row.wm_tpl
+          }
+        })
+        .then(
+          res => {
+            if (res.data.errorCode == 1) {
+              if (wm_id == 0) {
+                this.dialogCreate = false;
+              } else {
+                this.dialogEdit = false;
+              }
+              this.listWfModule();
+              this.$notify({
+                title: "提示",
+                message: this.row.wm_name + "保存成功",
+                duration: 0,
+                type: "success"
+              });
+            }
+          },
+          error => {}
+        );
+    },
+    onDelete(wm_id) {
+      this.$confirm("此操作删除该条数据, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          Vue.http
+            .jsonp(this.URL + "Module/delWfModule", {
+              params: { wm_id: wm_id }
+            })
+            .then(
+              res => {
+                if (res.data.errorCode == 1) {
+                  this.$message({
+                    type: "success",
+                    message: "删除成功!"
+                  });
+                } else {
+                  this.$message({
+                    type: "warning",
+                    message: "删除失败!"
+                  });
+                }
+                this.listWfModule();
+              },
+              error => {}
+            );
+        })
+        .catch(() => {});
+    },
+    onEdit(row) {
+      this.row = row;
+    },
+    handleSizeChange: function(size) {
+      this.pagesize = size;
+    },
+    handleCurrentChange: function(currentPage) {
+      this.currentPage = currentPage;
     }
   },
-  created(){
-  	this.listWfModule()
-  	Vue.http.get("module_icon")
-  	   .then((res) => {
-  	   		this.moduleIcon = res.data.module_icon
-  	   }, (error) => { })
-  },
-  computed:{
-
-  },
-  methods: {
-  	setUrl(msg){
-  		this.row.wm_icon = msg
-  	},
-  	listWfModule(){
-		Vue.http.jsonp(this.URL+"Module/listWfModule")
-		   .then((res) => {
-		   		console.log( res.data.list)
-		   		this.tableData = res.data.list
-
-		   }, (error) => { })
-  	},
-  	onSave(wm_id){
-  		Vue.http.jsonp(this.URL+"Module/editWfModule",{
-	  			params: { 
-	  				wm_id:wm_id,
-	  				wm_name:this.row.wm_name,
-	  				wm_company:this.row.wm_company,
-	  				wm_users:this.row.wm_users,
-	  				wm_partments:this.row.wm_partments,
-	  				wm_icon:this.row.wm_icon,
-	  				wm_abled:this.row.wm_abled,
-	  				wm_tpl:this.row.wm_tpl,
-	  			}
-  			})
-  		   .then((res) => {
-  		   		if(res.data.errorCode == 1){
-  		   			if(wm_id == 0){
-  		   				this.dialogCreate = false
-  		   			}else{
-  		   				this.dialogEdit = false
-  		   			}
-  		   			this.listWfModule()
-          			this.$notify({
-          			  title: '提示',
-          			  message: this.row.wm_name + '保存成功',
-          			  duration: 0,
-          			  type: 'success'
-          			});
-          		}
-
-  		   }, (error) => { })
-
-  	},
-  	onDelete(wm_id){
-  		this.$confirm('此操作删除该条数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-	  		Vue.http.jsonp(this.URL+"Module/delWfModule",{params: { wm_id: wm_id}})
-	  		   .then((res) => {
-					if(res.data.errorCode == 1){
-						this.$message({
-						  type: 'success',
-						  message: '删除成功!'
-						});
-					}else{
-						this.$message({
-						  type: 'warning',
-						  message: '删除失败!'
-						});
-					}
-	  		   		this.listWfModule()
-	  		   }, (error) => { })
-          
-
-        }).catch(() => {});
-  	},
-  	onEdit(row){
-  		this.row = row
-  	}
-
-  },
-  components:{}
-}
+  components: {}
+};
 </script>

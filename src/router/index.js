@@ -89,7 +89,6 @@ import outsideManageOutsideManage from '@/views/sign/outsideManage/outsideManage
 
 
 Vue.use(Router)
-
 export default new Router({
   routes: [
     /*

@@ -14,8 +14,8 @@
 						</div>
 						
 						<el-table
-						    :data="tableData" border
-			    			style="width: 100%" max-height="550">
+						    :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+			    			style="width: 100%" max-height="750">
 						    <el-table-column
 						      prop="wc_id"
 						      label="ID">
@@ -40,27 +40,26 @@
 						      <template slot-scope="scope">
 						        <el-button
 						          @click="dialogEdit = true, getCodeListById(scope.row.wc_id)"
-						          type="text"
-						          size="small">
+						          size="mini">
 						          编辑
 						        </el-button>
 						        <el-button
 						          @click="dialogDetail = true, onDetail(scope.row.wc_id)"
-						          type="text"
-						          size="small">
+						          type="info"
+						          size="mini">
 						          明细
 						        </el-button>
 						        <el-button
 						          @click="deleteCodeById(scope.row.wc_id)"
-						          type="text"
-						          size="small">
+						          type="danger"
+						          size="mini">
 						          删除
 						        </el-button>
 						      </template>
 						    </el-table-column>
 						    
 						</el-table>
-
+						<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
 
 					</div>
 			  		<el-dialog
@@ -233,197 +232,236 @@
 
 
 <script>
-import Vue from 'vue'
+import Vue from "vue";
 
 export default {
-  name:"dataSource",
+  name: "dataSource",
   data() {
     return {
-        tableData: [],
-        tableDetail:[],
-        tableEditDetail:[],
-        row:{
-        	"wc_id":"",
-			"wc_name":"",
-			"wc_name_ch": "",
-			"wc_abled": "1",
-        },
-        rowDetail:{
-        	"wcd_id":"",
-        	"wcd_wc_id":"",
-			"wcd_value": "",
-			"wcd_text": "",
-			"wcd_order": "0",
-			"wcd_is_default": "0",
-			"wcd_abled": "1"
-		},
-        dialogCreate:false,
-        dialogEdit:false,
-        dialogDetail:false,
-        dialogEditDetail:false,
-        dialogCreateDetail:false,
+      tableData: [],
+      tableDetail: [],
+      tableEditDetail: [],
+      row: {
+        wc_id: "",
+        wc_name: "",
+        wc_name_ch: "",
+        wc_abled: "1"
+      },
+      rowDetail: {
+        wcd_id: "",
+        wcd_wc_id: "",
+        wcd_value: "",
+        wcd_text: "",
+        wcd_order: "0",
+        wcd_is_default: "0",
+        wcd_abled: "1"
+      },
+      dialogCreate: false,
+      dialogEdit: false,
+      dialogDetail: false,
+      dialogEditDetail: false,
+      dialogCreateDetail: false,
+			total: 0, //默认数据总数
+      pagesize: 10, //每页的数据条数
+      currentPage: 1, //默认开始页面
     }
   },
-  created(){
-  	this.getCodeList()
+  created() {
+    this.getCodeList();
   },
-  computed:{
-
-  },
+  computed: {},
   methods: {
-
-  	//数据源列表
-  	getCodeList(){
-  		Vue.http.jsonp(this.URL+"FormWidgets/getCodeList")
-  		   .then((res) => {
-  		   		this.tableData = res.data.list
-  		   }, (error) => { })
-  	},
-  	//根据数据源ID查询
-  	getCodeListById(wc_id){
-  		Vue.http.jsonp(this.URL+"FormWidgets/getCodeList",{params: { wc_id:wc_id}})
-  		   .then((res) => {
-  		   		this.row = res.data.list[0]
-  		   }, (error) => { })
-  	},
-  	//编辑数据源保存
-  	onSaveEdit(wc_id){
-  		Vue.http.jsonp(this.URL+"FormWidgets/editCode",{
-	  			params: { 
-	  				wc_id:wc_id,
-	  				wc_name:this.row.wc_name,
-	  				wc_name_ch:this.row.wc_name_ch,
-	  				wc_abled:this.row.wc_abled,
-	  			}
-  			})
-  		   .then((res) => {
-  		   		if(res.data.errorCode == 1){
-  		   			if(wc_id == 0){
-  		   				this.dialogCreate = false
-  		   			}else{
-  		   				this.dialogEdit = false
-  		   			}
-  		   			this.getCodeList()
-          			this.$notify({
-          			  title: '提示',
-          			  message: this.row.wc_name_ch + '保存成功',
-          			  duration: 0,
-          			  type: 'success'
-          			});
-          		}
-
-  		   }, (error) => { })
-  	},
-  	//删除数据源和明细
-  	deleteCodeById(wc_id){
-  		this.$confirm('此操作删除该条数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-	  		Vue.http.jsonp(this.URL+"FormWidgets/deleteCodeById",{params: { wc_id: wc_id}})
-	  		   .then((res) => {
-					if(res.data.errorCode == 1){
-						this.$message({
-						  type: 'success',
-						  message: '删除成功!'
-						});
-					}else{
-						this.$message({
-						  type: 'warning',
-						  message: '删除失败!'
-						});
-					}
-	  		   		this.getCodeList()
-	  		   }, (error) => { })
-          
-
-        }).catch(() => {});
-  	},
-  	//数据源明细
-  	onDetail(wc_id){
-  		this.rowDetail.wcd_wc_id = wc_id
-  		Vue.http.jsonp(this.URL+"FormWidgets/getCodeDetailById",{params: { wc_id: wc_id}})
-  		   .then((res) => {
-  		   		this.tableDetail = res.data.list
-  		   		console.log(res)
-  		   }, (error) => { })
-  	},
-  	//根据数据源ID获取明细
-  	onDetailById(wcd_id){
-  		Vue.http.jsonp(this.URL+"FormWidgets/getCodeDetailByDetailId",{params: { wcd_id: wcd_id}})
-  		   .then((res) => {
-  		   		this.rowDetail = res.data.list[0]
-  		   }, (error) => { })
-
-
-  	},
-  	//删除数据源明细
-  	onDetailDelete(wcd_id,wcd_wc_id){
-  		this.$confirm('此操作删除该条数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-	  		Vue.http.jsonp(this.URL+"FormWidgets/deleteCodeDetailByDetailId",{params: { wcd_id: wcd_id}})
-	  		   .then((res) => {
-					if(res.data.errorCode == 1){
-						this.$message({
-						  type: 'success',
-						  message: '删除成功!'
-						});
-					}else{
-						this.$message({
-						  type: 'warning',
-						  message: '删除失败!'
-						});
-					}
-	  		   		this.onDetail(wcd_wc_id)
-	  		   }, (error) => { })
-          
-
-        }).catch(() => {});
-  		
-  	},
-  	//编辑数据源明细保存
-  	onSaveEditDetail(wcd_id,wcd_wc_id){
-  		Vue.http.jsonp(this.URL+"FormWidgets/editCodeDetail",{
-	  			params: { 
-	  				wcd_id:wcd_id,
-	  				wcd_wc_id:wcd_wc_id,
-	  				wcd_value:this.rowDetail.wcd_value,
-	  				wcd_text:this.rowDetail.wcd_text,
-	  				wcd_order:this.rowDetail.wcd_order,
-	  				wcd_is_default:this.rowDetail.wcd_is_default,
-	  				wcd_abled:this.rowDetail.wcd_abled,
-	  			}
-  			})
-  		   .then((res) => {
-  		   		console.log(res)
-  		   		//this.tableDetail = res.data.list
-  		   		if(res.data.errorCode == 1){
-  		   			if(wcd_id == 0){
-  		   				this.dialogCreateDetail = false
-  		   			}else{
-  		   				this.dialogEditDetail = false
-  		   			}
-  		   			this.onDetail(wcd_wc_id)
-          			this.$notify({
-          			  title: '提示',
-          			  message: this.rowDetail.wcd_text + '保存成功',
-          			  duration: 0,
-          			  type: 'success'
-          			});
-          		}
-
-  		   }, (error) => { })
-  	}
-
-
-
+    //数据源列表
+    getCodeList() {
+      Vue.http.jsonp(this.URL + "FormWidgets/getCodeList").then(
+        res => {
+          this.tableData = res.data.list
+					this.total = res.data.list.length
+        },
+        error => {}
+      );
+    },
+    //根据数据源ID查询
+    getCodeListById(wc_id) {
+      Vue.http
+        .jsonp(this.URL + "FormWidgets/getCodeList", {
+          params: { wc_id: wc_id }
+        })
+        .then(
+          res => {
+            this.row = res.data.list[0]
+          },
+          error => {}
+        );
+    },
+    //编辑数据源保存
+    onSaveEdit(wc_id) {
+      Vue.http
+        .jsonp(this.URL + "FormWidgets/editCode", {
+          params: {
+            wc_id: wc_id,
+            wc_name: this.row.wc_name,
+            wc_name_ch: this.row.wc_name_ch,
+            wc_abled: this.row.wc_abled
+          }
+        })
+        .then(
+          res => {
+            if (res.data.errorCode == 1) {
+              if (wc_id == 0) {
+                this.dialogCreate = false;
+              } else {
+                this.dialogEdit = false;
+              }
+              this.getCodeList();
+              this.$notify({
+                title: "提示",
+                message: this.row.wc_name_ch + "保存成功",
+                duration: 0,
+                type: "success"
+              });
+            }
+          },
+          error => {}
+        );
+    },
+    //删除数据源和明细
+    deleteCodeById(wc_id) {
+      this.$confirm("此操作删除该条数据, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          Vue.http
+            .jsonp(this.URL + "FormWidgets/deleteCodeById", {
+              params: { wc_id: wc_id }
+            })
+            .then(
+              res => {
+                if (res.data.errorCode == 1) {
+                  this.$message({
+                    type: "success",
+                    message: "删除成功!"
+                  });
+                } else {
+                  this.$message({
+                    type: "warning",
+                    message: "删除失败!"
+                  });
+                }
+                this.getCodeList();
+              },
+              error => {}
+            );
+        })
+        .catch(() => {});
+    },
+    //数据源明细
+    onDetail(wc_id) {
+      this.rowDetail.wcd_wc_id = wc_id;
+      Vue.http
+        .jsonp(this.URL + "FormWidgets/getCodeDetailById", {
+          params: { wc_id: wc_id }
+        })
+        .then(
+          res => {
+            this.tableDetail = res.data.list;
+            console.log(res);
+          },
+          error => {}
+        );
+    },
+    //根据数据源ID获取明细
+    onDetailById(wcd_id) {
+      Vue.http
+        .jsonp(this.URL + "FormWidgets/getCodeDetailByDetailId", {
+          params: { wcd_id: wcd_id }
+        })
+        .then(
+          res => {
+            this.rowDetail = res.data.list[0];
+          },
+          error => {}
+        );
+    },
+    //删除数据源明细
+    onDetailDelete(wcd_id, wcd_wc_id) {
+      this.$confirm("此操作删除该条数据, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          Vue.http
+            .jsonp(this.URL + "FormWidgets/deleteCodeDetailByDetailId", {
+              params: { wcd_id: wcd_id }
+            })
+            .then(
+              res => {
+                if (res.data.errorCode == 1) {
+                  this.$message({
+                    type: "success",
+                    message: "删除成功!"
+                  });
+                } else {
+                  this.$message({
+                    type: "warning",
+                    message: "删除失败!"
+                  });
+                }
+                this.onDetail(wcd_wc_id);
+              },
+              error => {}
+            );
+        })
+        .catch(() => {});
+    },
+    //编辑数据源明细保存
+    onSaveEditDetail(wcd_id, wcd_wc_id) {
+      Vue.http
+        .jsonp(this.URL + "FormWidgets/editCodeDetail", {
+          params: {
+            wcd_id: wcd_id,
+            wcd_wc_id: wcd_wc_id,
+            wcd_value: this.rowDetail.wcd_value,
+            wcd_text: this.rowDetail.wcd_text,
+            wcd_order: this.rowDetail.wcd_order,
+            wcd_is_default: this.rowDetail.wcd_is_default,
+            wcd_abled: this.rowDetail.wcd_abled
+          }
+        })
+        .then(
+          res => {
+            console.log(res);
+            //this.tableDetail = res.data.list
+            if (res.data.errorCode == 1) {
+              if (wcd_id == 0) {
+                this.dialogCreateDetail = false;
+              } else {
+                this.dialogEditDetail = false;
+              }
+              this.onDetail(wcd_wc_id);
+              this.$notify({
+                title: "提示",
+                message: this.rowDetail.wcd_text + "保存成功",
+                duration: 0,
+                type: "success"
+              });
+            }
+          },
+          error => {}
+        );
+    },
+		handleSizeChange: function(size) {
+      this.pagesize = size;
+    },
+    handleCurrentChange: function(currentPage) {
+      this.currentPage = currentPage;
+    }
   },
-  components:{}
-}
+  components: {}
+};
 </script>
 
 <style scoped lang="less">
