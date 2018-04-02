@@ -35,6 +35,8 @@ import customStatistics from '@/views/custom/statistics/statistics'
 import customStatisticsEdit from '@/views/custom/statistics/edit'
 //工作流
 import customWorkflow from '@/views/custom/workflow/workflow'
+//筛选
+import customSearch from '@/views/custom/search/search'
 
 
 
@@ -147,6 +149,10 @@ export default new Router({
         {
           path: '/custom/workflow/workflow',
           component: customWorkflow,
+        },
+        {
+          path: '/custom/search/search',
+          component: customSearch,
         },
       ]
     },

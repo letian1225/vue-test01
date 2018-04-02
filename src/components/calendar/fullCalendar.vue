@@ -18,12 +18,12 @@
     <!-- body display date day and events -->
     <div class="full-calendar-body">
       <div class="weeks">
-        <strong class="week" v-for="dayIndex in 7">{{ (dayIndex - 1) | localeWeekDay(firstDay, locale) }}</strong>
+        <strong class="week" v-for="(dayIndex,index) in 7" :key="index">{{ (dayIndex - 1) | localeWeekDay(firstDay, locale) }}</strong>
       </div>
       <div class="dates" ref="dates">
         <div class="dates-bg">
-          <div class="week-row" v-for="week in currentDates">
-            <div class="day-cell" v-for="day in week"
+          <div class="week-row" v-for="(week,index) in currentDates" :key="index">
+            <div class="day-cell" v-for="(day,i) in week" :key="i"
                  :class="{'today' : day.isToday,
               'not-cur-month' : !day.isCurMonth}">
               <p class="day-number">{{ day.monthDay }}</p>
@@ -33,14 +33,14 @@
 
         <!-- absolute so we can make dynamic td -->
         <div class="dates-events">
-          <div class="events-week" v-for="week in currentDates">
-            <div class="events-day" v-for="day in week" track-by="$index"
+          <div class="events-week" v-for="(week,index) in currentDates" :key="index">
+            <div class="events-day" v-for="(day,i) in week" track-by="$index" :key="i"
                  :class="{'today' : day.isToday,
               'not-cur-month' : !day.isCurMonth}" @click="dayClick(day, $event)">
               <p class="day-number">{{day.monthDay}}</p>
               <div class="event-box">
-                <event-card :event="event" :date="day.date" :firstDay="firstDay" v-for="event in day.events" v-show="event.cellIndex <= eventLimit" @click="eventClick">
-                  <template scope="p">
+                <event-card :event="event" :date="day.date" :firstDay="firstDay" v-for="(event,index) in day.events" :key="index" v-show="event.cellIndex <= eventLimit" @click="eventClick">
+                  <template slot-scope="p">
                     <slot name="fc-event-card" :event="p.event"></slot>
                   </template>
                 </event-card>
@@ -62,7 +62,7 @@
           </div>
           <div class="more-body">
             <ul class="body-list">
-              <li v-for="event in selectDay.events"
+              <li v-for="(event,index) in selectDay.events" :key="index"
                   v-show="event.isShow" class="body-item"
                   @click="eventClick(event, $event)">
                 {{event.title}}

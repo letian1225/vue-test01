@@ -74,6 +74,17 @@
           <el-menu-item index="/custom/statistics/statistics">统计管理</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
+
+      <el-submenu index="8">
+        <template slot="title">
+          <i class="fa fa-filter"></i>
+          <span slot="title">筛选条件</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item index="/custom/search/search">筛选条件</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
+
     </el-menu>
   </div>
 </template>
