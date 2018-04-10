@@ -7,7 +7,7 @@
       <router-link to="/home/home" >我的工作台</router-link>
       <router-link to="/custom/home" :class="customActive">自定义管理</router-link>
       <router-link to="/sign/home" :class="signActive">考勤管理</router-link>
-      <a href="javascript:;">系统设置</a>
+      <router-link to="/system/home" :class="systemActive">权限管理</router-link>
     </div>
   </div>
 </template>
@@ -30,6 +30,12 @@ export default {
     signActive(){
       let path = this.$route.path;
       if(path.indexOf('sign') !== -1){
+        return "router-link-active"
+      }
+    },
+    systemActive(){
+      let path = this.$route.path;
+      if(path.indexOf('system') !== -1){
         return "router-link-active"
       }
     },

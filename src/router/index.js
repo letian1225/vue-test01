@@ -39,8 +39,11 @@ import customWorkflow from '@/views/custom/workflow/workflow'
 import customSearch from '@/views/custom/search/search'
 
 
+/*------------------------系统设置-------------------------*/
 
-
+//主页
+import system from '@/views/system/home'
+import systemProxy from '@/views/system/proxy/proxy'
 
 /*------------------------考勤管理-------------------------*/
 
@@ -212,6 +215,17 @@ export default new Router({
           path: '/sign/outsideManage/outsideManage',
           component: outsideManageOutsideManage,
         },
+      ]
+    },
+    {
+      path: '/system/home',
+      component: system,
+      children: [
+        {
+          path: '/system/proxy/proxy',
+          component: systemProxy,
+        },
+        
       ]
     },
   ]
