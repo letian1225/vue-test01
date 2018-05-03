@@ -44,7 +44,7 @@ import customSearch from '@/views/custom/search/search'
 //主页
 import system from '@/views/system/home'
 import systemProxy from '@/views/system/proxy/proxy'
-
+import systemAdminPassword from '@/views/system/admin/password'
 /*------------------------考勤管理-------------------------*/
 
 //主页
@@ -224,6 +224,10 @@ export default new Router({
         {
           path: '/system/proxy/proxy',
           component: systemProxy,
+        },
+        {
+          path: '/system/admin/password',
+          component: systemAdminPassword,
         },
         
       ]

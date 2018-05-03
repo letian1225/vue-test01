@@ -43,7 +43,7 @@
         </el-menu-item-group>
       </el-submenu>
 
-
+      <!--
       <el-submenu index="5">
         <template slot="title">
           <i class="fa fa-list"></i>
@@ -53,6 +53,8 @@
           <el-menu-item index="/custom/list/list">列表管理</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
+      -->
+
       <el-submenu index="6">
         <template slot="title">
           <i class="fa fa-sitemap"></i>
@@ -64,7 +66,7 @@
       </el-submenu>
       
       
-
+      <!--
       <el-submenu index="7">
         <template slot="title">
           <i class="fa fa-line-chart"></i>
@@ -74,6 +76,7 @@
           <el-menu-item index="/custom/statistics/statistics">统计管理</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
+      -->
 
       <el-submenu index="8">
         <template slot="title">

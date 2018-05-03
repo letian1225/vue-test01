@@ -437,7 +437,19 @@ export default {
           res => {
             this.dialogNodesCreate = false;
             this.dialogNodesEdit = false;
-            this.listNodes(this.wn_workflow);
+            console.log(res);
+            if (res.data.errorCode == 1) {
+                this.$message({
+                  type: "success",
+                  message: "创建成功!"
+                });
+                this.listNodes(this.wn_workflow);
+              } else {
+                this.$message({
+                  type: "warning",
+                  message: "创建失败!"
+                });
+              }
           },
           error => {}
         );

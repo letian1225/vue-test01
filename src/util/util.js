@@ -2,15 +2,31 @@
 	全局插件
 	使用方式 this.CID
 */
+import { setCookie, getCookie, delCookie } from "@/vendor/cookie.js";
 export default {
 	install(Vue, options) {
 		//公司ID
 		Vue.prototype.CID = () => {
-			return '0';
+			return getCookie("company_id");
 		};
-		//登录用户ID
 		Vue.prototype.UID = () => {
-			return '0';
+			return getCookie("a_id");;
+		};
+		//代理商ID
+		Vue.prototype.AID = () => {
+			return getCookie("a_id");;
+		};
+		//代理商管理员ID
+		Vue.prototype.AUID = () => {
+			return getCookie("au_id");;
+		};
+		//当前登录的用户名
+		Vue.prototype.USERNAME = () => {
+			return getCookie("username");
+		};
+		//当前登录的用户名
+		Vue.prototype.LEVEL = () => {
+			return getCookie("a_level");
 		};
 		//token
 		Vue.prototype.TOKEN = () => {
