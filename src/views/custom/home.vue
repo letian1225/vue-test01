@@ -4,9 +4,9 @@
 			<el-header>
 				<navbar></navbar>
 			</el-header>
-			<el-container>
+			<el-container :class="this.LEVEL() == 2 ? 'max' : 'min'">
 				<sidemenu></sidemenu>
-				<el-main>
+				<el-main> 
 					<router-view></router-view>
 				</el-main>
 			</el-container>
@@ -23,3 +23,7 @@ export default {
   components:{ navbar,  sidemenu }
 }
 </script>
+<style>
+.min.el-container .el-menu{display: none;}
+.min.el-container .el-main{margin: 0;}
+</style>

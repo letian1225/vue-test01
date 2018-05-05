@@ -1,230 +1,173 @@
 <template>
-	
-	<div>
 
-				
-				
-					<div class="page-title">
-						<span>数据源管理</span>
-					</div>
+  <div>
 
-					<div class="page-body">
-						<div class="search-bar">
-							<el-button type="primary" size="small"  @click="dialogCreate = true">新建数据源</el-button>
-						</div>
-						
-						<el-table
-						    :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
-			    			style="width: 100%" max-height="750">
-						    <el-table-column
-						      prop="wc_id"
-						      label="ID">
-						    </el-table-column>
-						    <el-table-column
-						      prop="wc_name"
-						      label="数据源英文名称">
-						    </el-table-column>
-						    <el-table-column
-						      prop="wc_name_ch"
-						      label="数据源名称">
-						    </el-table-column>
-						    <el-table-column
-						      prop="wc_abled"
-						      label="是否启用">
-						      <template slot-scope="scope">
-						      	{{scope.row.wc_abled === '0' ? '否' : '是'}}
-						      </template>
-						    </el-table-column>
-						   
-						    <el-table-column label="操作">
-						      <template slot-scope="scope">
-						        <el-button
-						          @click="dialogEdit = true, getCodeListById(scope.row.wc_id)"
-						          size="mini">
-						          编辑
-						        </el-button>
-						        <el-button
-						          @click="dialogDetail = true, onDetail(scope.row.wc_id)"
-						          type="info"
-						          size="mini">
-						          明细
-						        </el-button>
-						        <el-button
-						          @click="deleteCodeById(scope.row.wc_id)"
-						          type="danger"
-						          size="mini">
-						          删除
-						        </el-button>
-						      </template>
-						    </el-table-column>
-						    
-						</el-table>
-						<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
+    <div class="page-title">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item>数据源管理</el-breadcrumb-item>
+      </el-breadcrumb>
+      <div class="pull-right">
+        <el-button type="primary" size="small" @click="dialogCreate = true">新建数据源</el-button>
+      </div>
 
-					</div>
-			  		<el-dialog
-		  		      width="40%"
-		  		      title="新增数据源"
-		  		      :visible.sync="dialogCreate"
-		  		      append-to-body>
-		  		      	<pre>{{row}}</pre>
-						<el-form ref="form" :model="row" label-width="120px">
-						  <el-form-item label="数据源英文名称">
-						    <el-input v-model="row.wc_name"></el-input>
-						  </el-form-item>
-						  <el-form-item label="数据源中文名称">
-						    <el-input v-model="row.wc_name_ch"></el-input>
-						  </el-form-item>
-						  <el-form-item label="是否启用">
-						    <el-switch v-model="row.wc_abled" active-value="1" inactive-value="0"></el-switch>
-						  </el-form-item>
-						  <el-form-item>
-						      <el-button type="primary" @click="onSaveEdit(0)">立即保存</el-button>
-						      <el-button @click="dialogCreate = false">取消</el-button>
-						    </el-form-item>
-						</el-form>
-		  		    </el-dialog>
-	    	  		<el-dialog
-	      		      width="40%"
-	      		      title="编辑数据源"
-	      		      :visible.sync="dialogEdit"
-	      		      append-to-body>
-	    				<el-form ref="form" :model="row" label-width="120px">
-	    				  <el-form-item label="数据源英文名称">
-	    				    <el-input v-model="row.wc_name"></el-input>
-	    				  </el-form-item>
-	    				  <el-form-item label="数据源中文名称">
-	    				    <el-input v-model="row.wc_name_ch"></el-input>
-	    				  </el-form-item>
-	    				  <el-form-item label="是否启用">
-	    				    <el-switch v-model="row.wc_abled" active-value="1" inactive-value="0"></el-switch>
-	    				  </el-form-item>
-	    				  <el-form-item>
-	    				      <el-button type="primary" @click="onSaveEdit(row.wc_id)">立即保存</el-button>
-	    				      <el-button @click="dialogEdit = false">取消</el-button>
-	    				    </el-form-item>
-	    				</el-form>
-	      		    </el-dialog>
-					<el-dialog title="数据源明细" :visible.sync="dialogDetail" width="80%">
-						<el-form :inline="true" class="form-inline">
-						  	<el-button type="primary" size="small"  @click="dialogCreateDetail = true">新建数据源明细</el-button>
-						</el-form>
-				  		<el-table
-				  		    :data="tableDetail"
-				  		    style="width: 100%" max-height="550">
-				  		    <el-table-column
-				  		      prop="wcd_id"
-				  		      label="ID">
-				  		    </el-table-column>
-				  		    <el-table-column
-				  		      prop="wcd_wc_id"
-				  		      label="关联主表代码ID">
-				  		    </el-table-column>
-				  		    <el-table-column
-				  		      prop="wcd_value"
-				  		      label="存储值">
-				  		    </el-table-column>
-				  		    <el-table-column
-				  		      prop="wcd_text"
-				  		      label="显示值">
-				  		    </el-table-column>
-				  		    <el-table-column
-				  		      prop="wcd_order"
-				  		      label="显示顺序">
-				  		    </el-table-column>
-				  		   	<el-table-column
-				  		      prop="wcd_is_default"
-				  		      label="是否是默认值">
-				  		      <template slot-scope="scope">
-			  		              <el-tag
-			  		                :type="scope.row.wcd_is_default === '0' ? 'primary' : 'success'"
-			  		                close-transition>{{scope.row.wcd_is_default === '0' ? '否' : '是'}}</el-tag>
-			  		          </template>
-				  		    </el-table-column>
-				  		    <el-table-column
-				  		      prop="wcd_abled"
-				  		      label="是否可用">
-				  		      <template slot-scope="scope">
-				  		      	{{scope.row.wcd_abled === '0' ? '否' : '是'}}
-				  		      </template>
-				  		    </el-table-column>
-				  		    <el-table-column label="操作">
-				  		      <template slot-scope="scope">
-				  		        <el-button
-				  		          @click="dialogEditDetail = true, onDetailById(scope.row.wcd_id)"
-				  		          type="text"
-				  		          size="small">
-				  		          编辑
-				  		        </el-button>
-				  		        <el-button
-				  		          @click="onDetailDelete(scope.row.wcd_id, scope.row.wcd_wc_id)"
-				  		          type="text"
-				  		          size="small">
-				  		          删除
-				  		        </el-button>
-				  		      </template>
-				  		    </el-table-column>
-				  		    
-				  		</el-table>
-	  			  		<el-dialog
-	  		  		      width="60%"
-	  		  		      title="新增数据源明细"
-	  		  		      :visible.sync="dialogCreateDetail"
-	  		  		      append-to-body>
-	  		  		      	<pre>{{rowDetail}}</pre>
-	  						<el-form ref="form" :model="rowDetail" label-width="120px">
-	  						  <el-form-item label="存储值">
-	  						    <el-input v-model="rowDetail.wcd_value"></el-input>
-	  						  </el-form-item>
-	  						  <el-form-item label="显示值">
-	  						    <el-input v-model="rowDetail.wcd_text"></el-input>
-	  						  </el-form-item>
-	  						  <el-form-item label="显示顺序">
-	  						    <el-input v-model="rowDetail.wcd_order"></el-input>
-	  						  </el-form-item>
-	  						  <el-form-item label="是否是默认值">
-	  						      <el-switch v-model="rowDetail.wcd_is_default" active-value="1" inactive-value="0"></el-switch>
-	  						  </el-form-item>
-	  						  <el-form-item label="是否启用">
-	  						      <el-switch v-model="rowDetail.wcd_abled" active-value="1" inactive-value="0"></el-switch>
-	  						  </el-form-item>
-	  						  <el-form-item>
-	  						      <el-button type="primary" @click="onSaveEditDetail(0,rowDetail.wcd_wc_id)">立即保存</el-button>
-	  						      <el-button @click="dialogCreateDetail = false">取消</el-button>
-	  						    </el-form-item>
-	  						</el-form>
-	  		  		    </el-dialog>
-				  		<el-dialog
-			  		      width="60%"
-			  		      title="编辑数据源明细"
-			  		      :visible.sync="dialogEditDetail"
-			  		      append-to-body>
-			  		      	<pre>{{rowDetail}}</pre>
-							<el-form ref="form" :model="rowDetail" label-width="120px">
-							  <el-form-item label="存储值">
-							    <el-input v-model="rowDetail.wcd_value"></el-input>
-							  </el-form-item>
-							  <el-form-item label="显示值">
-							    <el-input v-model="rowDetail.wcd_text"></el-input>
-							  </el-form-item>
-							  <el-form-item label="显示顺序">
-							    <el-input v-model="rowDetail.wcd_order"></el-input>
-							  </el-form-item>
-							  <el-form-item label="是否是默认值">
-							    <el-switch v-model="rowDetail.wcd_is_default" active-value="1" inactive-value="0"></el-switch>
-							  </el-form-item>
-							  <el-form-item label="是否启用">
-							    <el-switch v-model="rowDetail.wcd_abled" active-value="1" inactive-value="0"></el-switch>
-							  </el-form-item>
-							  <el-form-item>
-							      <el-button type="primary" @click="onSaveEditDetail(rowDetail.wcd_id,rowDetail.wcd_wc_id)">立即保存</el-button>
-							      <el-button @click="dialogEditDetail = false">取消</el-button>
-							    </el-form-item>
-							</el-form>
-			  		    </el-dialog>
-					</el-dialog>
+    </div>
 
-	</div>
+    <div class="page-body">
+ 
+      <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" max-height="750">
+        <el-table-column prop="wc_id" label="ID">
+        </el-table-column>
+        <el-table-column prop="wc_name" label="数据源英文名称">
+        </el-table-column>
+        <el-table-column prop="wc_name_ch" label="数据源名称">
+        </el-table-column>
+        <el-table-column prop="wc_abled" label="是否启用">
+          <template slot-scope="scope">
+            {{scope.row.wc_abled === '0' ? '否' : '是'}}
+          </template>
+        </el-table-column>
+
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button @click="dialogEdit = true, getCodeListById(scope.row.wc_id)" size="mini">
+              编辑
+            </el-button>
+            <el-button @click="dialogDetail = true, onDetail(scope.row.wc_id)" type="info" size="mini">
+              明细
+            </el-button>
+            <el-button @click="deleteCodeById(scope.row.wc_id)" type="danger" size="mini">
+              删除
+            </el-button>
+          </template>
+        </el-table-column>
+
+      </el-table>
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
+
+    </div>
+    <el-dialog width="40%" title="新增数据源" :visible.sync="dialogCreate" append-to-body>
+      <pre>{{row}}</pre>
+      <el-form ref="form" :model="row" label-width="120px">
+        <el-form-item label="数据源英文名称">
+          <el-input v-model="row.wc_name"></el-input>
+        </el-form-item>
+        <el-form-item label="数据源中文名称">
+          <el-input v-model="row.wc_name_ch"></el-input>
+        </el-form-item>
+        <el-form-item label="是否启用">
+          <el-switch v-model="row.wc_abled" active-value="1" inactive-value="0"></el-switch>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="small" type="primary" @click="onSaveEdit(0)">立即保存</el-button>
+          <el-button size="small" @click="dialogCreate = false">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <el-dialog width="40%" title="编辑数据源" :visible.sync="dialogEdit" append-to-body>
+      <el-form ref="form" :model="row" label-width="120px">
+        <el-form-item label="数据源英文名称">
+          <el-input v-model="row.wc_name"></el-input>
+        </el-form-item>
+        <el-form-item label="数据源中文名称">
+          <el-input v-model="row.wc_name_ch"></el-input>
+        </el-form-item>
+        <el-form-item label="是否启用">
+          <el-switch v-model="row.wc_abled" active-value="1" inactive-value="0"></el-switch>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="small" type="primary" @click="onSaveEdit(row.wc_id)">立即保存</el-button>
+          <el-button size="small" @click="dialogEdit = false">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <el-dialog title="数据源明细" :visible.sync="dialogDetail" width="80%">
+      <el-form :inline="true" class="form-inline">
+        <el-button type="primary" size="small" @click="dialogCreateDetail = true">新建数据源明细</el-button>
+      </el-form>
+      <el-table :data="tableDetail" style="width: 100%" max-height="550">
+        <el-table-column prop="wcd_id" label="ID">
+        </el-table-column>
+        <el-table-column prop="wcd_wc_id" label="关联主表代码ID">
+        </el-table-column>
+        <el-table-column prop="wcd_value" label="存储值">
+        </el-table-column>
+        <el-table-column prop="wcd_text" label="显示值">
+        </el-table-column>
+        <el-table-column prop="wcd_order" label="显示顺序">
+        </el-table-column>
+        <el-table-column prop="wcd_is_default" label="是否是默认值">
+          <template slot-scope="scope">
+            <el-tag :type="scope.row.wcd_is_default === '0' ? 'primary' : 'success'" close-transition>{{scope.row.wcd_is_default === '0' ? '否' : '是'}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="wcd_abled" label="是否可用">
+          <template slot-scope="scope">
+            {{scope.row.wcd_abled === '0' ? '否' : '是'}}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button @click="dialogEditDetail = true, onDetailById(scope.row.wcd_id)" type="text" size="small">
+              编辑
+            </el-button>
+            <el-button @click="onDetailDelete(scope.row.wcd_id, scope.row.wcd_wc_id)" type="text" size="small">
+              删除
+            </el-button>
+          </template>
+        </el-table-column>
+
+      </el-table>
+      <el-dialog width="60%" title="新增数据源明细" :visible.sync="dialogCreateDetail" append-to-body>
+        <pre>{{rowDetail}}</pre>
+        <el-form ref="form" :model="rowDetail" label-width="120px">
+          <el-form-item label="存储值">
+            <el-input v-model="rowDetail.wcd_value"></el-input>
+          </el-form-item>
+          <el-form-item label="显示值">
+            <el-input v-model="rowDetail.wcd_text"></el-input>
+          </el-form-item>
+          <el-form-item label="显示顺序">
+            <el-input v-model="rowDetail.wcd_order"></el-input>
+          </el-form-item>
+          <el-form-item label="是否是默认值">
+            <el-switch v-model="rowDetail.wcd_is_default" active-value="1" inactive-value="0"></el-switch>
+          </el-form-item>
+          <el-form-item label="是否启用">
+            <el-switch v-model="rowDetail.wcd_abled" active-value="1" inactive-value="0"></el-switch>
+          </el-form-item>
+          <el-form-item>
+            <el-button size="small" type="primary" @click="onSaveEditDetail(0,rowDetail.wcd_wc_id)">立即保存</el-button>
+            <el-button size="small" @click="dialogCreateDetail = false">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+      <el-dialog width="60%" title="编辑数据源明细" :visible.sync="dialogEditDetail" append-to-body>
+        <pre>{{rowDetail}}</pre>
+        <el-form ref="form" :model="rowDetail" label-width="120px">
+          <el-form-item label="存储值">
+            <el-input v-model="rowDetail.wcd_value"></el-input>
+          </el-form-item>
+          <el-form-item label="显示值">
+            <el-input v-model="rowDetail.wcd_text"></el-input>
+          </el-form-item>
+          <el-form-item label="显示顺序">
+            <el-input v-model="rowDetail.wcd_order"></el-input>
+          </el-form-item>
+          <el-form-item label="是否是默认值">
+            <el-switch v-model="rowDetail.wcd_is_default" active-value="1" inactive-value="0"></el-switch>
+          </el-form-item>
+          <el-form-item label="是否启用">
+            <el-switch v-model="rowDetail.wcd_abled" active-value="1" inactive-value="0"></el-switch>
+          </el-form-item>
+          <el-form-item>
+            <el-button size="small" type="primary" @click="onSaveEditDetail(rowDetail.wcd_id,rowDetail.wcd_wc_id)">立即保存</el-button>
+            <el-button size="small" @click="dialogEditDetail = false">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+    </el-dialog>
+
+  </div>
 </template>
 
 
@@ -261,10 +204,10 @@ export default {
       dialogDetail: false,
       dialogEditDetail: false,
       dialogCreateDetail: false,
-			total: 0, //默认数据总数
+      total: 0, //默认数据总数
       pagesize: 10, //每页的数据条数
-      currentPage: 1, //默认开始页面
-    }
+      currentPage: 1 //默认开始页面
+    };
   },
   created() {
     this.getCodeList();
@@ -275,8 +218,8 @@ export default {
     getCodeList() {
       Vue.http.jsonp(this.URL + "FormWidgets/getCodeList").then(
         res => {
-          this.tableData = res.data.list
-					this.total = res.data.list.length
+          this.tableData = res.data.list;
+          this.total = res.data.list.length;
         },
         error => {}
       );
@@ -289,7 +232,7 @@ export default {
         })
         .then(
           res => {
-            this.row = res.data.list[0]
+            this.row = res.data.list[0];
           },
           error => {}
         );
@@ -453,7 +396,7 @@ export default {
           error => {}
         );
     },
-		handleSizeChange: function(size) {
+    handleSizeChange: function(size) {
       this.pagesize = size;
     },
     handleCurrentChange: function(currentPage) {

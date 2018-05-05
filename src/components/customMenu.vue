@@ -1,45 +1,19 @@
 <template>
   <div>
     <el-menu :default-active="$route.path" class="menu" unique-opened router>
+
       
+
       <el-submenu index="1">
         <template slot="title">
-          <i class="fa fa-table"></i>
-          <span slot="title">表单</span>
-        </template>
-        <el-menu-item-group>
-          <el-menu-item index="/custom/form/form">表单管理</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-
-      <el-submenu index="2">
-        <template slot="title">
-          <i class="fa fa-th"></i>
-          <span slot="title">模块</span>
-        </template>
-        <el-menu-item-group>
-          <el-menu-item index="/custom/module/module">模块管理</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-
-      <el-submenu index="3">
-        <template slot="title">
           <i class="fa fa-database"></i>
-          <span slot="title">数据源</span>
+          <span slot="title">功能设置</span>
         </template>
         <el-menu-item-group>
           <el-menu-item index="/custom/source/source">数据源管理</el-menu-item>
         </el-menu-item-group>
-      </el-submenu>
-
-
-      <el-submenu index="4">
-        <template slot="title">
-          <i class="fa fa-dot-circle-o"></i>
-          <span slot="title">控件</span>
-        </template>
         <el-menu-item-group>
-          <el-menu-item index="/custom/control/control">控件管理</el-menu-item>
+          <el-menu-item index="/custom/control/control">表单控件管理</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
 
@@ -55,17 +29,6 @@
       </el-submenu>
       -->
 
-      <el-submenu index="6">
-        <template slot="title">
-          <i class="fa fa-sitemap"></i>
-          <span slot="title">工作流</span>
-        </template>
-        <el-menu-item-group>
-          <el-menu-item index="/custom/workflow/workflow">工作流管理</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-      
-      
       <!--
       <el-submenu index="7">
         <template slot="title">
@@ -78,30 +41,19 @@
       </el-submenu>
       -->
 
-      <el-submenu index="8">
-        <template slot="title">
-          <i class="fa fa-filter"></i>
-          <span slot="title">筛选条件</span>
-        </template>
-        <el-menu-item-group>
-          <el-menu-item index="/custom/search/search">筛选条件</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
-
     </el-menu>
   </div>
 </template>
 
 <script>
-
 export default {
-  name: '',
-  data () {
-    return {}
+  name: "",
+  data() {
+    return {};
   },
-  methods:{},
-  components:{}
-}
+  methods: {},
+  components: {}
+};
 </script>
 
 <style scoped lang="less">

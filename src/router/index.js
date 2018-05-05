@@ -18,6 +18,8 @@ import Home from '@/views/home/home'
 /*------------------------自定义表单-------------------------*/
 //主页
 import custom from '@/views/custom/home'
+//选择公司
+import customCompany from '@/views/custom/company/company'
 //模块管理
 import customModule from '@/views/custom/module/module'
 //表单管理
@@ -113,6 +115,10 @@ export default new Router({
       path: '/custom/home',
       component: custom,
       children: [
+        {
+          path: '/custom/company/company',
+          component: customCompany,
+        },
         {
           path: '/custom/module/module',
           component: customModule,

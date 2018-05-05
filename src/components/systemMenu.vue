@@ -2,7 +2,7 @@
   <div>
     <el-menu :default-active="$route.path" class="menu" unique-opened router>
       
-      <el-submenu index="1">
+      <el-submenu index="1" v-show="a_level == 0 ? false : true">
         <template slot="title">
           <i class="fa fa-sitemap"></i>
           <span slot="title">代理商</span>
@@ -28,11 +28,13 @@
 </template>
 
 <script>
-
+import { setCookie, getCookie, delCookie } from "@/vendor/cookie.js";
 export default {
   name: '',
   data () {
-    return {}
+    return {
+      a_level:getCookie("a_level"),
+    }
   },
   methods:{},
   components:{}

@@ -1,18 +1,19 @@
 <template>
 
 	<div>
-		<div class="page-title">
-			<span>条件筛选</span>
-		</div>
+		
+    <div class="page-title">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+				<el-breadcrumb-item :to="{ path: '/custom/company/company' }">选择公司</el-breadcrumb-item>
+				<el-breadcrumb-item :to="{ path: '/custom/module/module?company_id='+$route.query.company_id }">模块管理</el-breadcrumb-item>
+				<el-breadcrumb-item>全局条件筛选配置</el-breadcrumb-item>
+			</el-breadcrumb>
+      <div class="pull-right">
+        <el-button size="small" type="primary" @click="dialogCreate = true">新建</el-button>
+      </div>
+    </div>
 
 		<div class="page-body">
-			<div class="search-bar">
-				<el-form :inline="true">
-					<el-form-item>
-						<el-button size="small" type="primary" @click="dialogCreate = true">新建</el-button>
-					</el-form-item>
-				</el-form>
-			</div>
 			<el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" max-height="750">
 				<el-table-column prop="s_id" label="ID">
 				</el-table-column>
@@ -52,8 +53,8 @@
 				</el-form-item>
 
 				<el-form-item>
-					<el-button type="primary" @click="create">立即保存</el-button>
-					<el-button @click="dialogCreate = false">取消</el-button>
+					<el-button size="small" type="primary" @click="create">立即保存</el-button>
+					<el-button size="small" @click="dialogCreate = false">取消</el-button>
 				</el-form-item>
 			</el-form>
 		</el-dialog>
@@ -74,8 +75,8 @@
 				</el-form-item>
 
 				<el-form-item>
-					<el-button type="primary" @click="edit(formData.s_id)">立即保存</el-button>
-					<el-button @click="dialogEdit=false">取消</el-button>
+					<el-button size="small" type="primary" @click="edit(formData.s_id)">立即保存</el-button>
+					<el-button size="small" @click="dialogEdit=false">取消</el-button>
 				</el-form-item>
 			</el-form>
 		</el-dialog>
@@ -106,7 +107,7 @@ export default {
     };
   },
   created() {
-    this.getFormSearchByCompayID(this.CID());
+    this.getFormSearchByCompayID();
     this.getCode();
   },
   computed: {},
@@ -124,19 +125,19 @@ export default {
           error => {}
         );
     },
-    getFormSearchByCompayID(company_id) {
+    getFormSearchByCompayID() {
       Vue.http
         .jsonp(this.URL + "FormSearch/getFormSearchByCompayID", {
-          params: { company_id: company_id }
+          params: { company_id: this.$route.query.company_id }
         })
         .then(
           res => {
             console.log(res);
-            if (res.data.errorCode == 2) {
-              return;
+            if (res.data.errorCode == 1) {
+              this.tableData = res.data.list;
+              this.total = res.data.list.length;
             }
-            this.tableData = res.data.list;
-            this.total = res.data.list.length;
+            
           },
           error => {}
         );
@@ -152,14 +153,14 @@ export default {
         .jsonp(this.URL + "FormSearch/editFormSearch", {
           params: {
             s_id: s_id,
-            company_id: this.CID(),
+            company_id: this.$route.query.company_id ,
             s_key: this.formData.s_key,
             s_name: this.formData.s_name
           }
         })
         .then(
           res => {
-            this.getFormSearchByCompayID(this.CID());
+            this.getFormSearchByCompayID();
             this.dialogCreate = false;
             this.dialogEdit = false;
           },
@@ -190,7 +191,7 @@ export default {
                     message: "删除失败!"
                   });
                 }
-                this.getFormSearchByCompayID(this.CID());
+                this.getFormSearchByCompayID();
               },
               error => {}
             );

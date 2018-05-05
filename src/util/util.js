@@ -5,13 +5,6 @@
 import { setCookie, getCookie, delCookie } from "@/vendor/cookie.js";
 export default {
 	install(Vue, options) {
-		//公司ID
-		Vue.prototype.CID = () => {
-			return getCookie("company_id");
-		};
-		Vue.prototype.UID = () => {
-			return getCookie("a_id");;
-		};
 		//代理商ID
 		Vue.prototype.AID = () => {
 			return getCookie("a_id");;
@@ -20,11 +13,7 @@ export default {
 		Vue.prototype.AUID = () => {
 			return getCookie("au_id");;
 		};
-		//当前登录的用户名
-		Vue.prototype.USERNAME = () => {
-			return getCookie("username");
-		};
-		//当前登录的用户名
+		//当前登录的用户级别
 		Vue.prototype.LEVEL = () => {
 			return getCookie("a_level");
 		};

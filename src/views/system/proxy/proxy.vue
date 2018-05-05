@@ -1,18 +1,19 @@
 <template>
 
   <div>
+    
     <div class="page-title">
-      <span>代理商管理</span>
-    </div>
+
+			<el-breadcrumb separator-class="el-icon-arrow-right">
+				<el-breadcrumb-item>代理商管理</el-breadcrumb-item>
+			</el-breadcrumb>
+			<div class="pull-right">
+				<el-button v-show="this.LEVEL() != 0" type="primary" size="mini" @click="dialogCreate = true">新建代理商</el-button>
+			</div>
+
+		</div>
 
     <div class="page-body">
-      <div class="search-bar" v-show="this.LEVEL() != 0">
-        <el-form :inline="true">
-          <el-form-item>
-            <el-button size="small" type="primary" @click="dialogCreate = true">新建代理商</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
       <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" max-height="750">
         <el-table-column prop="a_id" label="ID">
         </el-table-column>
@@ -25,8 +26,8 @@
             <el-tag type="primary" size="small" v-show="scope.row.a_level == 2">顶级代理商</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="a_parent_id" label="父级ID">
-        </el-table-column>
+        <!-- <el-table-column prop="a_parent_id" label="父级ID">
+        </el-table-column> -->
         <el-table-column prop="create_time" label="创建时间">
         </el-table-column>
         <el-table-column prop="is_can_create" label="创建下级">
@@ -46,6 +47,16 @@
             </el-button>
           </template>
         </el-table-column>
+        <el-table-column label="分配公司">
+          <template slot-scope="scope">
+            <el-button @click="dialogCompany = true, 
+            listAgentCompany(scope.row.a_id), 
+            formCompanyData.a_id = scope.row.a_id, 
+            formCompanyData.au_id = scope.row.au_id" type="info" size="mini">
+              管理
+            </el-button>
+          </template>
+        </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button @click="dialogEdit = true, formData = scope.row" size="mini">
@@ -61,7 +72,7 @@
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total"></el-pagination>
     </div>
 
-    <el-dialog width="80%" title="公司分配管理" :visible.sync="dialogCompany" append-to-body>
+    <el-dialog width="50%" title="公司分配管理" :visible.sync="dialogCompany" append-to-body>
       <div class="search-bar">
         <el-form :inline="true">
           <el-form-item>
@@ -70,11 +81,7 @@
         </el-form>
       </div>
       <el-table :data="tableCompanyData" style="width: 100%" max-height="750">
-        <el-table-column prop="company_id" label="ID">
-        </el-table-column>
         <el-table-column prop="company_name" label="名称">
-        </el-table-column>
-        <el-table-column prop="company_tel" label="联系电话">
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -103,7 +110,7 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog width="90%" title="管理员管理" :visible.sync="dialogAdmin" append-to-body>
+    <el-dialog width="50%" title="管理员管理" :visible.sync="dialogAdmin" append-to-body>
       <div class="search-bar">
         <el-form :inline="true">
           <el-form-item>
@@ -112,26 +119,13 @@
         </el-form>
       </div>
       <el-table :data="tableAdminData" style="width: 100%" max-height="750">
-        <el-table-column prop="au_id" label="ID">
-        </el-table-column>
         <el-table-column prop="au_login_name" label="用户登录名">
-        </el-table-column>
-        <el-table-column prop="a_id" label="所属代理商ID">
         </el-table-column>
         <el-table-column prop="au_name" label="用户名称">
         </el-table-column>
         <el-table-column prop="au_mobile" label="管理员电话">
         </el-table-column>
-        <el-table-column label="分配公司">
-          <template slot-scope="scope">
-            <el-button @click="dialogCompany = true, 
-            getAgentByUserID(scope.row.au_id), 
-            formCompanyData.a_id = scope.row.a_id, 
-            formCompanyData.au_id = scope.row.au_id" type="info" size="mini">
-              管理
-            </el-button>
-          </template>
-        </el-table-column>
+        
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button @click="dialogAdminEdit = true, formAdminData = scope.row" size="mini">
@@ -187,17 +181,22 @@
           <el-input v-model="formData.a_name" style="width:194px;"></el-input>
         </el-form-item>
         <el-form-item label="代理商级别">
-          <el-radio-group v-model="formData.a_level" size="mini">
+          <el-radio-group v-model="formData.a_level" size="mini" @change="levelChange">
             <el-radio-button label="0">公司</el-radio-button>
             <el-radio-button label="1">代理商</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="父级代理商">
+        <el-form-item label="父级代理商" style="display:none;">
           <el-input v-model="formData.a_parent_id" style="width:194px;"></el-input>
         </el-form-item>
-        <el-form-item label="是否可以创建下级代理商">
-          <el-switch v-model="formData.is_can_create" active-value="1" inactive-value="0"></el-switch>
+        <el-form-item label="是否可以创建下级代理商" v-show="formData.a_level == 0 ? false : true">
+          <el-radio-group v-model="formData.is_can_create" size="mini">
+            <el-radio-button label="0">否</el-radio-button>
+            <el-radio-button label="1">是</el-radio-button>
+          </el-radio-group>
         </el-form-item>
+
+        
 
         <el-form-item>
           <el-button size="small" type="primary" @click="create">立即保存</el-button>
@@ -212,16 +211,19 @@
           <el-input v-model="formData.a_name" style="width:194px;"></el-input>
         </el-form-item>
         <el-form-item label="代理商级别">
-          <el-radio-group v-model="formData.a_level" size="mini">
+          <el-radio-group v-model="formData.a_level" size="mini" @change="levelChange">
             <el-radio-button label="0">公司</el-radio-button>
             <el-radio-button label="1">代理商</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="父级代理商">
+        <el-form-item label="父级代理商" style="display:none;">
           <el-input v-model="formData.a_parent_id" style="width:194px;"></el-input>
         </el-form-item>
-        <el-form-item label="是否可以创建下级代理商">
-          <el-switch v-model="formData.is_can_create" active-value="1" inactive-value="0"></el-switch>
+        <el-form-item label="是否可以创建下级代理商" v-show="formData.a_level == 0 ? false : true">
+          <el-radio-group v-model="formData.is_can_create" size="mini">
+            <el-radio-button label="0">否</el-radio-button>
+            <el-radio-button label="1">是</el-radio-button>
+          </el-radio-group>
         </el-form-item>
 
         <el-form-item>
@@ -249,10 +251,11 @@ export default {
       tableAdminData: [],
       tableCompanyData: [],
       formData: {
-        is_can_create: "1",
+        is_can_create:1,
+        a_level:1,
         a_parent_id: this.AID()
       },
-      formAdminData: {},
+      formAdminData: {},  
       formCompanyData: {},
       companyData: [],
       dialogCreate: false,
@@ -273,26 +276,36 @@ export default {
   },
   computed: {},
   methods: {
-    getAgentByUserID(au_id) {
+    levelChange(msg){
+      console.log(msg);
+      if(msg == 0){
+        this.formData.is_can_create = 0;
+      }else{
+        this.formData.is_can_create = 1;
+      }
+    },
+    //根据代理商ID取得此代理商下的所有公司列表
+    listAgentCompany(a_id) {
       Vue.http
-        .jsonp(this.URL + "Agent/getAgentByUserID", {
-          params: { au_id: au_id }
+        .jsonp(this.URL + "Agent/listAgentCompany", {
+          params: { a_id: a_id }
         })
         .then(
           res => {
             console.log(res);
             this.tableCompanyData = [];
             if (res.data.agent !== null) {
-              this.tableCompanyData = res.data.company_list;
+              this.tableCompanyData = res.data.list;
             }
           },
           error => {}
         );
     },
+    //取得所有没有代理商归属的公司列表
     listCompanyNoAgent() {
       Vue.http.jsonp(this.URL + "Agent/listCompanyNoAgent").then(
         res => {
-          console.log(res);
+          this.companyData = [];
           this.companyData = res.data.list;
         },
         error => {}
@@ -300,7 +313,6 @@ export default {
     },
     //给指定的代理商分配公司
     distributeCompany() {
-      return;
       Vue.http
         .jsonp(this.URL + "Agent/distributeCompany", {
           params: {
@@ -311,8 +323,16 @@ export default {
         .then(
           res => {
             console.log(res);
-            //根据用户ID取得用户代理商以及下属公司列表
-            this.getAgentByUserID(this.formCompanyData.au_id);
+            if(res.data.errorCode == 1){
+              //根据用户ID取得用户代理商以及下属公司列表
+              this.listAgentCompany(this.formCompanyData.a_id);
+            }else{
+              this.$message({
+                message: res.data.errorReason,
+                type: "error"
+              });
+            }
+            
           },
           error => {}
         );
@@ -328,7 +348,7 @@ export default {
         })
         .then(
           res => {
-            this.getAgentByUserID(this.formCompanyData.au_id);
+            this.listAgentCompany(this.formCompanyData.a_id);
           },
           error => {}
         );

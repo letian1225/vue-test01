@@ -65,11 +65,10 @@ export default {
         .then(
           res => {
             if (res.data.errorCode == "1") {
-              console.log(res);
               setCookie("username", this.loginForm.au_login_name, 1000 * 60);
               setCookie("a_id", res.data.agent_user.a_id, 1000 * 60);
               setCookie("au_id", res.data.agent_user.au_id, 1000 * 60);
-              this.$router.push("/custom/home");
+              this.$router.push("/custom/company/company");
             } else {
               this.$message({
                 showClose: true,

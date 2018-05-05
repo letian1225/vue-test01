@@ -1,12 +1,10 @@
 <template>
 
   <div>
-    <div class="page-title">
-      <span>密码设置</span>
-    </div>
+   
 
-    <div class="page-body">
-
+    <div class="page-body" style="padding:20px;"> 
+      <h5>密码修改</h5>
       <el-form label-width="70px" style="width:300px; margin-top:50px;">
         <el-form-item label="新的密码">
           <el-input type="password" v-model="pass" auto-complete="off"></el-input>
@@ -95,5 +93,5 @@ export default {
 </script>
 
 <style scoped lang="less">
-
+  h5{padding: 0 0 10px; margin: 0 0 20px 0; border-bottom: 1px solid #ddd;}
 </style>
