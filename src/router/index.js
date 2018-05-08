@@ -25,6 +25,8 @@ import customModule from '@/views/custom/module/module'
 //表单管理
 import customForm from '@/views/custom/form/form'
 import customFormEdit from '@/views/custom/form/edit'
+import customFormShare from '@/views/custom/form/share'
+
 //数据源管理
 import customSource from '@/views/custom/source/source'
 //控件管理
@@ -39,6 +41,7 @@ import customStatisticsEdit from '@/views/custom/statistics/edit'
 import customWorkflow from '@/views/custom/workflow/workflow'
 //筛选
 import customSearch from '@/views/custom/search/search'
+
 
 
 /*------------------------系统设置-------------------------*/
@@ -130,6 +133,10 @@ export default new Router({
         {
           path: '/custom/form/edit',
           component: customFormEdit,
+        },
+        {
+          path: '/custom/form/share',
+          component: customFormShare,
         },
         {
           path: '/custom/source/source',

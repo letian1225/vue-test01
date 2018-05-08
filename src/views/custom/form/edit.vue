@@ -287,6 +287,9 @@ export default {
     this.listWfForms();
     this.getCodeList();
     this.listWfWorkFlow();
+
+    console.log(this.$route.module_id);
+    //if(this.$route.module_id == undefined)
   },
   methods: {
     empty() {

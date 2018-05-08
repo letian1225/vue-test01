@@ -15,6 +15,9 @@
         <el-menu-item-group>
           <el-menu-item index="/custom/control/control">表单控件管理</el-menu-item>
         </el-menu-item-group>
+        <el-menu-item-group>
+          <el-menu-item index="/custom/form/share">表单共享</el-menu-item>
+        </el-menu-item-group>
       </el-submenu>
 
       <!--

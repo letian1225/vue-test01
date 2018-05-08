@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <span class="brand">
-      大连翼网科技有限公司
+      
     </span>
     <div class="nav">
       <!-- <router-link to="/home/home">我的工作台</router-link> -->
