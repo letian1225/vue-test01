@@ -10,23 +10,27 @@
       </el-button-group>
     </div>
 
-    <el-dialog title="保存表单"  :visible.sync="dialogCreateFormVisible" width="400px">
+    <el-dialog title="保存表单" :visible.sync="dialogCreateFormVisible" width="400px">
       <el-form ref="form" :model="formJson" label-width="100px">
         <el-form-item label="表单名称">
           <el-input v-model="formJson.wff_name" style="width:192px;"></el-input>
         </el-form-item>
-        <el-form-item label="归属工作流" v-show="workflowDisplay">
-          <el-select v-model="formJson.wff_workflow" placeholder="请选择">
-            <el-option v-for="item in workflowData" :key="item.wf_id" :label="item.wf_name" :value="item.wf_id">
-              <span style="float: left;">{{ item.wf_name }}</span>
-              <span style="float: right;">{{ item.wf_id }}</span>
-            </el-option>
-          </el-select>
+        <el-form-item label="表单描述">
+          <el-input v-model="formJson.wff_name_ch" style="width:192px;"></el-input>
         </el-form-item>
-
-        <el-form-item label="是否启用">
-          <el-switch v-model="formJson.wff_abled" active-value="1" inactive-value="0"></el-switch>
-        </el-form-item>
+        <div v-show="shareDisplay">
+          <el-form-item label="归属工作流" v-show="workflowDisplay">
+            <el-select v-model="formJson.wff_workflow" placeholder="请选择">
+              <el-option v-for="item in workflowData" :key="item.wf_id" :label="item.wf_name" :value="item.wf_id">
+                <span style="float: left;">{{ item.wf_name }}</span>
+                <span style="float: right;">{{ item.wf_id }}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否启用">
+            <el-switch v-model="formJson.wff_abled" active-value="1" inactive-value="0"></el-switch>
+          </el-form-item>
+        </div>
         <el-form-item>
           <el-button type="primary" size="small" @click="onCreateFormSubmit">立即保存</el-button>
           <el-button size="small" @click="dialogCreateFormVisible = false">取消</el-button>
@@ -271,13 +275,15 @@ export default {
       dialogCreateFormVisible: false,
       formJson: {
         wff_name: "",
+        wff_name_ch:"",
         wff_company: "",
         wff_module: "",
         wff_workflow: "",
         wff_abled: "1",
         wff_json: []
       },
-      workflowDisplay:false,
+      workflowDisplay: false,
+      shareDisplay: true,
       workflowData: []
     };
   },
@@ -287,9 +293,13 @@ export default {
     this.listWfForms();
     this.getCodeList();
     this.listWfWorkFlow();
-
-    console.log(this.$route.module_id);
-    //if(this.$route.module_id == undefined)
+    console.log(this.$route.query.module_id);
+    if (
+      this.$route.query.module_id == undefined &&
+      this.$route.query.company_id == undefined
+    ) {
+      this.shareDisplay = false;
+    }
   },
   methods: {
     empty() {
@@ -302,11 +312,10 @@ export default {
         })
         .then(
           res => {
-            console.log(res);
-            if(res.data.errorCode == 1){
+            if (res.data.errorCode == 1) {
               this.workflowData = res.data.list;
               this.workflowDisplay = true;
-            }else{
+            } else {
               this.workflowDisplay = false;
             }
           },
@@ -366,10 +375,12 @@ export default {
         .then(
           res => {
             this.formJson.wff_name = res.data.list[0].wff_name;
+            this.formJson.wff_name_ch = res.data.list[0].wff_name_ch,
             this.formJson.wff_company = this.$route.query.company_id;
             this.formJson.wff_module = this.$route.query.module_id;
             this.formJson.wff_workflow = res.data.list[0].wff_workflow;
             this.formJson.wff_node = res.data.list[0].wff_node;
+
             if (res.data.list[0].wff_json != null) {
               this.formJson.wff_json = res.data.list[0].wff_json;
             }
@@ -388,42 +399,86 @@ export default {
     },
     //编辑、新建表单
     editWfForms(wff_id) {
-      Vue.http
-        .post(
-          this.URL + "Forms/editWfForms",
-          {
-            wff_id: wff_id,
-            wff_name: this.formJson.wff_name,
-            wff_company: this.$route.query.company_id,
-            wff_module: this.$route.query.module_id,
-            wff_node: this.formJson.wff_node,
-            wff_workflow: this.formJson.wff_workflow,
-            wff_abled: this.formJson.wff_abled,
-            wff_json: JSON.stringify(this.formJson.wff_json)
-          },
-          { emulateJSON: true }
-        )
-        .then(
-          res => {
-            if (res.data.errorCode == 1) {
-              this.dialogCreateFormVisible = false;
-              this.$notify({
-                title: "提示",
-                message: this.formJson.wff_name + "保存成功",
-                duration: 0,
-                type: "success"
-              });
-              window.history.go(-1);
-            } else {
-              this.dialogCreateFormVisible = false;
-              this.$message({
-                message: "保存失败，请联系管理员！",
-                type: "error"
-              });
-            }
-          },
-          error => {}
-        );
+      console.log(this.$route.module_id)
+      //共享
+      if (
+        this.$route.query.module_id == undefined &&
+        this.$route.query.company_id == undefined
+      ) {
+        console.log("xxx");
+        Vue.http
+          .post(
+            this.URL + "Forms/editWfForms",
+            {
+              wff_id: wff_id,
+              wff_name: this.formJson.wff_name,
+              wff_name_ch:this.formJson.wff_name_ch,
+              wff_company: "1",
+              wff_abled: this.formJson.wff_abled,
+              wff_json: JSON.stringify(this.formJson.wff_json)
+            },
+            { emulateJSON: true }
+          )
+          .then(
+            res => {
+              if (res.data.errorCode == 1) {
+                this.dialogCreateFormVisible = false;
+                this.$notify({
+                  title: "提示",
+                  message: this.formJson.wff_name + "保存成功",
+                  duration: 0,
+                  type: "success"
+                });
+                window.history.go(-1);
+              } else {
+                this.dialogCreateFormVisible = false;
+                this.$message({
+                  message: "保存失败，请联系管理员！",
+                  type: "error"
+                });
+              }
+            },
+            error => {}
+          );
+      } else {
+        Vue.http
+          .post(
+            this.URL + "Forms/editWfForms",
+            {
+              wff_id: wff_id,
+              wff_name: this.formJson.wff_name,
+              wff_name_ch:this.formJson.wff_name_ch,
+              wff_company: this.$route.query.company_id,
+              wff_module: this.$route.query.module_id,
+              wff_node: this.formJson.wff_node,
+              wff_workflow: this.formJson.wff_workflow,
+              wff_abled: this.formJson.wff_abled,
+              wff_json: JSON.stringify(this.formJson.wff_json)
+            },
+            { emulateJSON: true }
+          )
+          .then(
+            res => {
+              if (res.data.errorCode == 1) {
+                this.dialogCreateFormVisible = false;
+                this.$notify({
+                  title: "提示",
+                  message: this.formJson.wff_name + "保存成功",
+                  duration: 0,
+                  type: "success"
+                });
+                window.history.go(-1);
+              } else {
+                this.dialogCreateFormVisible = false;
+                this.$message({
+                  message: "保存失败，请联系管理员！",
+                  type: "error"
+                });
+              }
+            },
+            error => {}
+          );
+      }
     },
     selectedEvent(person) {
       this.attribute = person;

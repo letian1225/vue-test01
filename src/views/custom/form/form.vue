@@ -11,6 +11,7 @@
 			</el-breadcrumb>
 			<div class="pull-right">
 				<el-button type="primary" size="mini" @click="onCreateForm('0')">新建表单</el-button>
+        <el-button type="info" size="mini" @click="$router.push({path: '/custom/form/store',query: {module_id: $route.query.module_id,company_id: $route.query.company_id}});">表单市场</el-button>
 				<el-button size="mini" onclick="window.history.go(-1)">返回上一级</el-button>
 			</div>
 
@@ -21,10 +22,11 @@
 			<el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" max-height="750">
 				<el-table-column prop="wff_name" label="表单名称">
 				</el-table-column>
-
+        <el-table-column prop="wff_name_ch" label="表单描述">
+				</el-table-column>
 				<el-table-column prop="wff_workflow" label="归属工作流ID">
 					<template slot-scope="scope">
-						{{scope.row.wff_workflow == 0 ? "未加入工作流" : scope.row.wff_workflow}}
+						{{scope.row.wff_workflow == 0 || scope.row.wff_workflow == null ? "未加入工作流" : scope.row.wff_workflow}}
 					</template>
 				</el-table-column>
 				<el-table-column prop="wff_abled" label="状态">
@@ -44,6 +46,9 @@
 			</el-table>
 			<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total">
 			</el-pagination>
+
+
+
 
 		</div>
 

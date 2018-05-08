@@ -26,6 +26,7 @@ import customModule from '@/views/custom/module/module'
 import customForm from '@/views/custom/form/form'
 import customFormEdit from '@/views/custom/form/edit'
 import customFormShare from '@/views/custom/form/share'
+import customFormStore from '@/views/custom/form/store'
 
 //数据源管理
 import customSource from '@/views/custom/source/source'
@@ -137,6 +138,10 @@ export default new Router({
         {
           path: '/custom/form/share',
           component: customFormShare,
+        },
+        {
+          path: '/custom/form/store',
+          component: customFormStore,
         },
         {
           path: '/custom/source/source',
