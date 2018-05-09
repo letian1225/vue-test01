@@ -50,7 +50,7 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button @click="onCreateForm(scope.row.wff_id)" size="mini">编辑</el-button>
-              <el-button type="primary" @click="delWfForms(scope.row.wff_id)" size="mini">删除</el-button>
+              <el-button type="danger" @click="delWfForms(scope.row.wff_id)" size="mini">删除</el-button>
               
             </template>
           </el-table-column>
@@ -101,7 +101,18 @@ export default {
         })
         .then(
           res => {
-            console.log(res);
+            if(res.data.errorCode == 1){
+              this.tableShareData = res.data.list; 
+              this.$message({
+                message: res.data.errorName,
+                type: 'success'
+              });
+            }else{
+              this.$message({
+                message: res.data.errorName,
+                type: 'error'
+              });
+            }
           },
           error => {}
         );
@@ -146,9 +157,9 @@ export default {
         })
         .then(
           res => {
-            console.log(res);
-            this.tableShareData = res.data.list; 
-            
+            if(res.data.errorCode == 1){
+              this.tableShareData = res.data.list; 
+            }
           },
           error => {}
         );

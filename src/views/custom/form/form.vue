@@ -1,58 +1,56 @@
 <template>
 
-	<div>
+  <div>
 
-		<div class="page-title">
+    <div class="page-title">
 
-			<el-breadcrumb separator-class="el-icon-arrow-right">
-				<el-breadcrumb-item :to="{ path: '/custom/company/company' }">选择公司</el-breadcrumb-item>
-				<el-breadcrumb-item :to="{ path: '/custom/module/module?company_id='+$route.query.company_id }">模块管理</el-breadcrumb-item>
-				<el-breadcrumb-item>表单管理</el-breadcrumb-item>
-			</el-breadcrumb>
-			<div class="pull-right">
-				<el-button type="primary" size="mini" @click="onCreateForm('0')">新建表单</el-button>
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item :to="{ path: '/custom/company/company' }">选择公司</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/custom/module/module?company_id='+$route.query.company_id }">模块管理</el-breadcrumb-item>
+        <el-breadcrumb-item>表单管理</el-breadcrumb-item>
+      </el-breadcrumb>
+      <div class="pull-right">
+        <el-button type="primary" size="mini" @click="onCreateForm('0')">新建表单</el-button>
         <el-button type="info" size="mini" @click="$router.push({path: '/custom/form/store',query: {module_id: $route.query.module_id,company_id: $route.query.company_id}});">表单市场</el-button>
-				<el-button size="mini" onclick="window.history.go(-1)">返回上一级</el-button>
-			</div>
+        <el-button size="mini" onclick="window.history.go(-1)">返回上一级</el-button>
+      </div>
 
-		</div>
+    </div>
 
-		<div class="page-body">
+    <div class="page-body">
 
-			<el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" max-height="750">
-				<el-table-column prop="wff_name" label="表单名称">
-				</el-table-column>
+      <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" max-height="750">
+        <el-table-column prop="wff_name" label="表单名称">
+        </el-table-column>
         <el-table-column prop="wff_name_ch" label="表单描述">
-				</el-table-column>
-				<el-table-column prop="wff_workflow" label="归属工作流ID">
-					<template slot-scope="scope">
-						{{scope.row.wff_workflow == 0 || scope.row.wff_workflow == null ? "未加入工作流" : scope.row.wff_workflow}}
-					</template>
-				</el-table-column>
-				<el-table-column prop="wff_abled" label="状态">
-					<template slot-scope="scope">
-						{{scope.row.wff_abled == 1 ? "正常" : "禁用"}}
-					</template>
-				</el-table-column>
-				<el-table-column prop="wff_create_time" label="创建时间">
-				</el-table-column>
-				<el-table-column prop="wff_start_time" label="启用时间">
-				</el-table-column>
-				<el-table-column label="操作">
-					<template slot-scope="scope">
-						<el-button @click="onCreateForm(scope.row.wff_id)" size="mini">编辑</el-button>
-					</template>
-				</el-table-column>
-			</el-table>
-			<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total">
-			</el-pagination>
+        </el-table-column>
+        <el-table-column prop="wff_workflow" label="归属工作流ID">
+          <template slot-scope="scope">
+            {{scope.row.wff_workflow == 0 || scope.row.wff_workflow == null ? "未加入工作流" : scope.row.wff_workflow}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="wff_abled" label="状态">
+          <template slot-scope="scope">
+            {{scope.row.wff_abled == 1 ? "正常" : "禁用"}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="wff_create_time" label="创建时间">
+        </el-table-column>
+        <el-table-column prop="wff_start_time" label="启用时间">
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button @click="onCreateForm(scope.row.wff_id)" size="mini">编辑</el-button>
+            <el-button type="danger" @click="delWfForms(scope.row.wff_id)" size="mini">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+      </el-pagination>
 
+    </div>
 
-
-
-		</div>
-
-	</div>
+  </div>
 </template>
 
 
@@ -98,7 +96,38 @@ export default {
           error => {}
         );
     },
-		//创建、编辑表单
+    delWfForms(wff_id) {
+      this.$confirm("此操作删除该条数据, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          Vue.http
+            .jsonp(this.URL + "Forms/delWfForms", {
+              params: { wff_id: wff_id }
+            })
+            .then(
+              res => {
+                if (res.data.errorCode == 1) {
+                  this.$message({
+                    type: "success",
+                    message: "删除成功!"
+                  });
+                } else {
+                  this.$message({
+                    type: "warning",
+                    message: "删除失败!"
+                  });
+                }
+                this.listWfFormWidgets();
+              },
+              error => {}
+            );
+        })
+        .catch(() => {});
+    },
+    //创建、编辑表单
     onCreateForm(wff_id) {
       if (wff_id === 0) {
         this.$router.push({

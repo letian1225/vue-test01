@@ -68,7 +68,7 @@ export default {
               setCookie("username", this.loginForm.au_login_name, 1000 * 60);
               setCookie("a_id", res.data.agent_user.a_id, 1000 * 60);
               setCookie("au_id", res.data.agent_user.au_id, 1000 * 60);
-              this.$router.push("/custom/company/company");
+              this.$router.push("/home/home");
             } else {
               this.$message({
                 showClose: true,

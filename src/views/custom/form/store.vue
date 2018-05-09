@@ -25,7 +25,7 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button @click="copyForm(scope.row.wff_id)" size="mini">使用</el-button>
+          <el-button @click="copyForm(scope.row.wff_id, scope.row.wff_name, scope.row.wff_name_ch)" size="mini">复用</el-button>
           
         </template>
       </el-table-column>
@@ -61,7 +61,7 @@ export default {
   },
   computed: {},
   methods: {
-    copyForm(wff_id){
+    copyForm(wff_id, wff_name, wff_name_ch){
       Vue.http
         .jsonp(this.URL + "Forms/copyForm", {
           params: {
@@ -72,7 +72,25 @@ export default {
         })
         .then(
           res => {
-            console.log(res);
+            if(res.data.errorCode == 1){
+              this.$notify({
+                title: wff_name + '('+wff_name_ch +'）表单复用成功',
+                message: '已经成功加入您的表单列表',
+                type: 'success'
+              });
+              this.$router.push({
+                path: "/custom/form/form",
+                query: {
+                  module_id: this.$route.query.module_id,
+                  company_id: this.$route.query.company_id
+                }
+              });
+            }else{
+              this.$message({
+                message: res.data.errorName,
+                type: 'error'
+              });
+            }
           },
           error => {}
         );
